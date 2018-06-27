@@ -61,15 +61,30 @@
        (or (= :any (first suited-connectors))
            (some #(= ranks %) suited-connectors))))
 
+(defn suited-one-gap? [hand ranks]
+  (and (suited? hand)
+       (= (first ranks) (+ 2 (second ranks)))))
+
+(defn suited-one-gap-match [hand ranks suited-one-gaps]
+  (and (suited-one-gap? hand ranks)
+       (or (= :any (first suited-one-gaps))
+           (some #(= ranks %) suited-one-gaps))))
+
+(defn not-nil-by-key [key coll]
+  (filter #(not (nil? %)) (map key coll)))
+
 (defn actionable-non-pair? [action-with hand]
-  (let [suited-ranks (map :suited action-with)
-        unsuited-ranks (map :unsuited action-with)
-        suited-connectors (filter #(not (nil? %)) (map :suited-connector action-with))
+  (let [suited-ranks (not-nil-by-key :suited action-with)
+        unsuited-ranks (not-nil-by-key :unsuited action-with)
+        suited-connectors (not-nil-by-key :suited-connector action-with)
+        suited-one-gaps (not-nil-by-key :suited-one-gap action-with)
         ranks (hand-ranks hand)]
     (or
       (suited-rank-match hand ranks suited-ranks)
       (unsuited-rank-match ranks unsuited-ranks)
-      (suited-connector-match hand ranks suited-connectors))))
+      (suited-connector-match hand ranks suited-connectors)
+      (suited-one-gap-match hand ranks suited-one-gaps)
+      )))
 
 (defn action [{:keys [position action-to-you hand]}]
   (let [raise-with (get-in proper-action [position action-to-you :raise])
