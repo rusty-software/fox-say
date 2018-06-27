@@ -20,7 +20,7 @@
                           {:suited [14 13]}
                           {:unsuited [14 13]}]
                   :call []}}
-   :blind {:called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8} {:pair 7}
+   :blind {:called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8}
                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
                             {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]
                     :call [{:suited-connector :any}
