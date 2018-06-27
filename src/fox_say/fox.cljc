@@ -14,12 +14,11 @@
 (def proper-action
   {:utg {:called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
                           {:suited [14 13]} {:suited [14 12]}
-                          {:unsuited [14 13]} {:unsuited [14 12]}]
-                  :call []}
+                          {:unsuited [14 13]} {:unsuited [14 12]}]}
          :raised {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11}
                           {:suited [14 13]}
-                          {:unsuited [14 13]}]
-                  :call []}}
+                          {:unsuited [14 13]}]}}
+
    :blind {:called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8}
                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
                             {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]
@@ -30,7 +29,22 @@
                             {:unsuited [14 13]}]
                     :call [{:pair 11} {:pair 10} {:pair 9} {:pair 8} {:pair 7} {:pair 6}
                            {:suited-connector :any}
-                           {:suited-one-gap :any}]}}})
+                           {:suited-one-gap :any}]}}
+
+   :middle {:folded {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8} {:pair 7}
+                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}
+                             {:suited [14 10]} {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]}]}
+            :called {:call [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9}
+                            {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:suited [14 10]}
+                            {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]}
+                            {:suited-connector :any}]}
+            :raised {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
+                             {:suited [14 13]} {:suited [14 12]}
+                             {:unsuited [14 13]} {:unsuited [14 12]}]
+                     :call [{:pair 9} {:pair 8} {:pair 7} {:pair 6} {:pair 5} {:pair 4} {:pair 3} {:pair 2}
+                            {:suited-connector :any}]}}
+
+   })
 
 (defn pair? [hand]
   (apply = (map rank hand)))
