@@ -1,5 +1,12 @@
 (ns fox-say.fox)
 
+(def positions #{:utg :blind :middle :late})
+(def actions-to-you #{:folded :called :raised})
+(def fresh-deck
+  (for [rank ["A" "K" "Q" "J" "T" "9" "8" "7" "6" "5" "4" "3" "2"]
+        suit ["S" "H" "C" "D"]]
+    (str rank suit)))
+
 (defn rank [[r _]]
   (let [upper-ranks {\T 10 \J 11 \Q 12 \K 13 \A 14}]
     (if (Character/isDigit r)
@@ -130,3 +137,16 @@
       (actionable-non-pair? call-with hand) :call
 
       :else :fold)))
+
+(defn deal []
+  {:position (rand-nth (seq positions))
+   :action-to-you (rand-nth (seq actions-to-you))
+   :hand (take 2 (shuffle fresh-deck))})
+
+(comment
+  (let [deck (shuffle fresh-deck)]
+    (loop [deck deck]
+      (let [hand (take 2 deck)]
+        (when (seq hand)
+          (println "hand" hand)
+          (recur (drop 2 deck)))))))

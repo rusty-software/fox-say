@@ -2,23 +2,6 @@
   (:require [clojure.test :refer [deftest testing is]]
             [fox-say.fox :as fox]))
 
-(def ranks ["A" "K" "Q" "J" "T" "9" "8" "7" "6" "5" "4" "3" "2"])
-
-(def suits ["S" "H" "C" "D"])
-
-(def fresh-deck
-  (for [rank ranks
-        suit suits]
-    (str rank suit)))
-
-(comment
-  (let [deck (shuffle fresh-deck)]
-      (loop [deck deck]
-        (let [hand (take 2 deck)]
-          (when (seq hand)
-            (println "hand" hand)
-            (recur (drop 2 deck)))))))
-
 (deftest test-utg
   (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"] ["AD" "KS"] ["AH" "QC"]]]
     (doseq [hand raising-hands]
@@ -138,3 +121,9 @@
       (doseq [hand calling-hands]
         (is (= :call (fox/action {:position :late :action-to-you :raised :hand hand}))
             (str "should call in late position when raised to you with " hand))))))
+
+(deftest test-deal
+  (let [{:keys [position action-to-you hand]} (fox/deal)]
+    (is (fox/positions position))
+    (is (fox/actions-to-you action-to-you))
+    (is (= 2 (count hand)))))
