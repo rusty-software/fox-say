@@ -1,14 +1,49 @@
 (ns fox-say.main
-    (:require [reagent.core :as reagent]))
+    (:require [reagent.core :as reagent]
+              [fox-say.fox :as fox]))
 
 (enable-console-print!)
 
-(println "This text is printed from src/fox-say/main.cljs. Go ahead and edit it and see reloading in action.")
-
 ;; define your app data so that it doesn't get over-written on reload
+(defonce app-state (reagent/atom {}))
 
-(defonce app-state (reagent/atom {:text "Hello world!"}))
+(defn deal! []
+  (let [{:keys [position action-to-you hand]} (fox/deal)]
+    (swap! app-state assoc :position position :action-to-you action-to-you :hand hand :result nil)))
 
+(defn check-proper-action [state action]
+  (let [proper-action (fox/action @app-state)]
+    (if (= action proper-action)
+      (assoc state :result :correct)
+      (assoc state :result :incorrect))))
+
+(defn raise! []
+  (swap! app-state check-proper-action :raise))
+
+(defn call! []
+  (swap! app-state check-proper-action :call))
+
+(defn fold! []
+  (swap! app-state check-proper-action :fold))
+
+(defn display []
+  [:div
+   [:button {:on-click #(deal!)} "Deal"]
+   (let [{:keys [position action-to-you hand result]} @app-state]
+     [:div
+      [:div (str "Position: " position)]
+      [:div (str "Action to you: " action-to-you)]
+      [:div (str "Hand: " hand)]
+      [:button {:on-click #(raise!)} "Raise"]
+      [:button {:on-click #(call!)} "Call"]
+      [:button {:on-click #(fold!)} "Fold"]
+      [:div (str "Result: " result)]])
+   ]
+  )
+
+(reagent/render-component
+  [display]
+  (. js/document (getElementById "app")))
 
 (defn on-js-reload []
   ;; optionally touch your app-state to force rerendering depending on

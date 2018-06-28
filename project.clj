@@ -16,8 +16,6 @@
 
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
-
   :cljsbuild {:builds
               [{:id "dev"
                 :source-paths ["src"]
@@ -25,7 +23,7 @@
                 ;; The presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel {:on-jsload "fox-say.core/on-js-reload"
+                :figwheel {:on-jsload "fox-say.main/on-js-reload"
                            ;; :open-urls will pop open your application
                            ;; in the default browser once Figwheel has
                            ;; started and compiled your application.

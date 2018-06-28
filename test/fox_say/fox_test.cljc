@@ -20,8 +20,10 @@
   (testing "called to you"
     (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"] ["9S" "9H"] ["8C" "8D"]
                          ["AD" "KS"] ["AH" "QC"] ["AD" "JC"]]
-          calling-hands [["AD" "TD"] ["KC" "QC"] ["KH" "JH"] ["KS" "TS"] ["QH" "JH"] ["QD" "TD"] ["JH" "TH"]
-                         ["9H" "8H"] ["7S" "6S"] ["5D" "4D"] ["3C" "2C"]]
+          calling-hands [["AD" "TD"] ["KH" "JH"] ["KS" "TS"] ["QD" "TD"]
+                         ["KC" "QC"] ["QH" "JH"] ["JH" "TH"]
+                         ["9H" "8H"] ["7S" "6S"] ["5D" "4D"] ["3C" "2C"]
+                         ]
           folding-hands [["7H" "7D"] ["6S" "6C"]
                          ["AD" "TC"] ["KS" "QC"] ["KD" "JH"] ["KH" "TS"] ["QS" "JH"] ["QC" "TD"] ["JS" "TH"]
                          ["9C" "8H"] ["7H" "6S"] ["5H" "4D"] ["3D" "2C"]]]

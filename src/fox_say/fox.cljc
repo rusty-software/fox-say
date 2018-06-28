@@ -1,5 +1,9 @@
 (ns fox-say.fox)
 
+(defn str->int [s]
+  #?(:clj  (Integer/parseInt s)
+     :cljs (js/parseInt s)))
+
 (def positions #{:utg :blind :middle :late})
 (def actions-to-you #{:folded :called :raised})
 (def fresh-deck
@@ -8,10 +12,12 @@
     (str rank suit)))
 
 (defn rank [[r _]]
-  (let [upper-ranks {\T 10 \J 11 \Q 12 \K 13 \A 14}]
-    (if (Character/isDigit r)
-      (Integer/valueOf (str r))
-      (get upper-ranks r))))
+  (let [r (str r)
+        upper-ranks {"A" 14 "K" 13 "Q" 12 "J" 11 "T" 10}
+        v (get upper-ranks r)]
+    (if v
+      v
+      (str->int r))))
 
 (defn suit [[_ s]]
   (str s))
@@ -28,7 +34,7 @@
                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
                             {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]
                     :call [{:suited-connector :any}
-                           {:suited [14 10]} {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]} {:suited [11 10]}]}
+                           {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]} {:suited [11 10]}]}
            :raised {:raise [{:pair 14} {:pair 13} {:pair 12}
                             {:suited [14 13]}
                             {:unsuited [14 13]}]
@@ -78,8 +84,11 @@
 (defn suited? [hand]
   (apply = (map suit hand)))
 
+(defn not-nil-by-key [key coll]
+  (filter #(not (nil? %)) (map key coll)))
+
 (defn actionable-pair? [action-with hand]
-  (let [actionable-pair-ranks (map :pair action-with)]
+  (let [actionable-pair-ranks (not-nil-by-key :pair action-with)]
     (and (pair? hand)
          (or (= :any (first actionable-pair-ranks))
              (some #(= (rank (first hand)) %) actionable-pair-ranks)))))
@@ -110,9 +119,6 @@
   (and (suited-one-gap? hand ranks)
        (or (= :any (first suited-one-gaps))
            (some #(= ranks %) suited-one-gaps))))
-
-(defn not-nil-by-key [key coll]
-  (filter #(not (nil? %)) (map key coll)))
 
 (defn actionable-non-pair? [action-with hand]
   (let [suited-ranks (not-nil-by-key :suited action-with)
