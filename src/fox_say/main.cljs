@@ -12,10 +12,9 @@
     (swap! app-state assoc :position position :action-to-you action-to-you :hand hand :result nil)))
 
 (defn check-proper-action [state action]
-  (let [proper-action (fox/action @app-state)]
-    (if (= action proper-action)
-      (assoc state :result :correct)
-      (assoc state :result :incorrect))))
+  (let [action-description (fox/action-with-description @app-state)
+        result (if (= action (:action action-description)) :correct :incorrect)]
+    (assoc state :result result :description (:description action-description))))
 
 (defn raise! []
   (swap! app-state check-proper-action :raise))
@@ -29,7 +28,7 @@
 (defn display []
   [:div
    [:button {:on-click #(deal!)} "Deal"]
-   (let [{:keys [position action-to-you hand result]} @app-state]
+   (let [{:keys [position action-to-you hand result description]} @app-state]
      [:div
       [:div (str "Position: " position)]
       [:div (str "Action to you: " action-to-you)]
@@ -37,7 +36,8 @@
       [:button {:on-click #(raise!)} "Raise"]
       [:button {:on-click #(call!)} "Call"]
       [:button {:on-click #(fold!)} "Fold"]
-      [:div (str "Result: " result)]])
+      [:div (str "Result: " result)]
+      [:div description]])
    ]
   )
 

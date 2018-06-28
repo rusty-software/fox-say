@@ -78,6 +78,23 @@
                    :call [{:pair 9} {:pair 8} {:pair 7}
                           {:suited-connector :any}]}}})
 
+(def proper-action-description
+  {:utg {:called {:raise "You should raise UTG when called to you with AA - TT, AK, AQ."}
+         :raised {:raise "You should raise UTG when raised to you with AA - JJ, AK."}}
+   :blind {:called {:raise "You should raise in the blind when called to you with AA - 88, or AJ or better."
+                    :call "You should call in the blind when called to you with suited connectors or suited cards T or better."}
+           :raised {:raise "You should raise in the blind when raised to you with AA - QQ, or AK."
+                    :call "You should call in the blind when raised to you with suited connectors or suited one gaps, provided you have lots of chips."}}
+   :middle {:folded {:raise "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better."}
+            :called {:call "You should call in the middle when called to you with AA - 99, suited cards QT or better, or suited connectors." }
+            :raised {:raise "You should raise in the middle when raised to you with AA - TT, AK, AQ."
+                     :call "You should call in the middle when raised to you with suited connectors or middle or lower pairs."}}
+   :late {:folded {:raise "You should raise in late position when folded to with any pair, AX suited, A7 or better, big cards (T or better), or suited connectors."}
+          :called {:raise "You should raise in late position when called to with AA - TT, AK - AJ."
+                   :call "You should call in late position when called to with 99 or lower pairs, suited cards 9 or better, AX suited, or suited connectors."}
+          :raised {:raise "You should raise in late position when raised to with AA - TT, AK, AQ."
+                   :call "You should call in late position when raised to with medium pairs (99 - 77), or suited connectors."}}})
+
 (defn pair? [hand]
   (apply = (map rank hand)))
 
@@ -143,6 +160,12 @@
       (actionable-non-pair? call-with hand) :call
 
       :else :fold)))
+
+(defn action-with-description [{:keys [position action-to-you hand] :as hand-state}]
+  (let [action (action hand-state)
+        description (get-in proper-action-description [position action-to-you action])]
+    {:action action
+     :description description}))
 
 (defn deal []
   {:position (rand-nth (seq positions))
