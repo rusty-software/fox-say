@@ -44,6 +44,29 @@
                      :call [{:pair 9} {:pair 8} {:pair 7} {:pair 6} {:pair 5} {:pair 4} {:pair 3} {:pair 2}
                             {:suited-connector :any}]}}
 
+   :late {:folded {:raise [{:pair :any}
+                           {:suited-connector :any}
+                           {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:suited [14 10]} {:suited [14 9]} {:suited [14 8]}
+                           {:suited [14 7]} {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;AXs
+                           {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]} {:unsuited [14 10]} {:unsuited [14 9]} {:unsuited [14 8]} {:unsuited [14 7]} ;;A7o
+                           {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]} {:suited [11 10]} {:unsuited [13 12]} {:unsuited [13 11]}
+                           {:unsuited [13 10]} {:unsuited [12 11]} {:unsuited [12 10]} {:unsuited [11 10]} ;;big cards >= 10
+                           ]}
+          :called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
+                           {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
+                           {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]
+                   :call [{:pair 9} {:pair 8} {:pair 7} {:pair 6} {:pair 5} {:pair 4} {:pair 3} {:pair 2}
+                          {:suited-connector :any}
+                          {:suited [14 10]} {:suited [14 9]} {:suited [14 8]} {:suited [14 7]} {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;AXs
+                          {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [13 9]}
+                          {:suited [12 11]} {:suited [12 10]} {:suited [12 9]}
+                          {:suited [11 10]} {:suited [11 9]}
+                          {:suited [10 9]}
+                          ]}
+          :raised {:raise [
+                           ]
+                   :call [
+                          ]}}
    })
 
 (defn pair? [hand]
@@ -55,7 +78,8 @@
 (defn actionable-pair? [action-with hand]
   (let [actionable-pair-ranks (map :pair action-with)]
     (and (pair? hand)
-         (some #(= (rank (first hand)) %) actionable-pair-ranks))))
+         (or (= :any (first actionable-pair-ranks))
+             (some #(= (rank (first hand)) %) actionable-pair-ranks)))))
 
 (defn hand-ranks [hand]
   (sort > (map rank hand)))
