@@ -1,13 +1,13 @@
 (ns fox-say.main
-    (:require ))
+    (:require [reagent.core :as reagent]))
 
 (enable-console-print!)
 
-(println "This text is printed from src/fox-say/core.cljs. Go ahead and edit it and see reloading in action.")
+(println "This text is printed from src/fox-say/main.cljs. Go ahead and edit it and see reloading in action.")
 
 ;; define your app data so that it doesn't get over-written on reload
 
-(defonce app-state (atom {:text "Hello world!"}))
+(defonce app-state (reagent/atom {:text "Hello world!"}))
 
 
 (defn on-js-reload []
