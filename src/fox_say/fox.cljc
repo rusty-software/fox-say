@@ -1,15 +1,13 @@
 (ns fox-say.fox)
 
-(defn rank [card]
-  (let [[r _] card
-        upper-ranks {\T 10 \J 11 \Q 12 \K 13 \A 14}]
+(defn rank [[r _]]
+  (let [upper-ranks {\T 10 \J 11 \Q 12 \K 13 \A 14}]
     (if (Character/isDigit r)
       (Integer/valueOf (str r))
       (get upper-ranks r))))
 
-(defn suit [card]
-  (let [[_ s] card]
-    (str s)))
+(defn suit [[_ s]]
+  (str s))
 
 (def proper-action
   {:utg {:called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
@@ -61,13 +59,11 @@
                           {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [13 9]}
                           {:suited [12 11]} {:suited [12 10]} {:suited [12 9]}
                           {:suited [11 10]} {:suited [11 9]}
-                          {:suited [10 9]}
-                          ]}
-          :raised {:raise [
-                           ]
-                   :call [
-                          ]}}
-   })
+                          {:suited [10 9]}]}
+          :raised {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
+                           {:suited [14 13]} {:suited [14 12]} {:unsuited [14 13]} {:unsuited [14 12]}]
+                   :call [{:pair 9} {:pair 8} {:pair 7}
+                          {:suited-connector :any}]}}})
 
 (defn pair? [hand]
   (apply = (map rank hand)))
@@ -121,8 +117,7 @@
       (suited-rank-match hand ranks suited-ranks)
       (unsuited-rank-match ranks unsuited-ranks)
       (suited-connector-match hand ranks suited-connectors)
-      (suited-one-gap-match hand ranks suited-one-gaps)
-      )))
+      (suited-one-gap-match hand ranks suited-one-gaps))))
 
 (defn action [{:keys [position action-to-you hand]}]
   (let [raise-with (get-in proper-action [position action-to-you :raise])
