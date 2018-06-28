@@ -6,6 +6,7 @@
 
 (def positions #{:utg :blind :middle :late})
 (def actions-to-you #{:folded :called :raised})
+
 (def fresh-deck
   (for [rank ["A" "K" "Q" "J" "T" "9" "8" "7" "6" "5" "4" "3" "2"]
         suit ["S" "H" "C" "D"]]
@@ -163,8 +164,12 @@
 
 (defn action-with-description [{:keys [position action-to-you hand] :as hand-state}]
   (let [action (action hand-state)
-        description (get-in proper-action-description [position action-to-you action])]
-    {:action action
+        description (get-in proper-action-description [position action-to-you action])
+        description (if (not description)
+                      (for [a [:raise :call]]
+                        (get-in proper-action-description [position action-to-you a]))
+                      [description])]
+    {:correct-action action
      :description description}))
 
 (defn deal []

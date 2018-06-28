@@ -9,12 +9,13 @@
 
 (defn deal! []
   (let [{:keys [position action-to-you hand]} (fox/deal)]
-    (swap! app-state assoc :position position :action-to-you action-to-you :hand hand :result nil)))
+    (swap! app-state assoc :position position :action-to-you action-to-you :hand hand
+           :chosen-action nil :correct-action nil :result nil :description nil)))
 
 (defn check-proper-action [state action]
-  (let [action-description (fox/action-with-description @app-state)
-        result (if (= action (:action action-description)) :correct :incorrect)]
-    (assoc state :result result :description (:description action-description))))
+  (let [{:keys [correct-action description]} (fox/action-with-description @app-state)
+        result (if (= action correct-action) :correct :incorrect)]
+    (assoc state :chosen-action action :correct-action correct-action :result result :description description)))
 
 (defn raise! []
   (swap! app-state check-proper-action :raise))
@@ -28,7 +29,7 @@
 (defn display []
   [:div
    [:button {:on-click #(deal!)} "Deal"]
-   (let [{:keys [position action-to-you hand result description]} @app-state]
+   (let [{:keys [position action-to-you hand chosen-action correct-action result description]} @app-state]
      [:div
       [:div (str "Position: " position)]
       [:div (str "Action to you: " action-to-you)]
@@ -36,8 +37,13 @@
       [:button {:on-click #(raise!)} "Raise"]
       [:button {:on-click #(call!)} "Call"]
       [:button {:on-click #(fold!)} "Fold"]
+      [:div (str "Chosen action: " chosen-action)]
+      [:div (str "Proper action: " correct-action)]
       [:div (str "Result: " result)]
-      [:div description]])
+      (for [d description]
+        (do
+          ^{:key (rand-int 1000000)}
+          [:div d]))])
    ]
   )
 
