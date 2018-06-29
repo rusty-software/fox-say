@@ -162,7 +162,7 @@
 
       :else :fold)))
 
-(defn action-with-description [{:keys [position action-to-you hand] :as hand-state}]
+(defn action-with-description [{:keys [position action-to-you] :as hand-state}]
   (let [action (action hand-state)
         description (get-in proper-action-description [position action-to-you action])
         description (if (not description)
@@ -173,9 +173,14 @@
      :description description}))
 
 (defn deal []
-  {:position (rand-nth (seq positions))
-   :action-to-you (rand-nth (seq actions-to-you))
-   :hand (take 2 (shuffle fresh-deck))})
+  (let [position (rand-nth (seq positions))
+        action-to-you (rand-nth (seq actions-to-you))]
+    (if (and (= :folded action-to-you)
+             (#{:utg :blind} position))
+      (deal)
+      {:position position
+       :action-to-you action-to-you
+       :hand (take 2 (shuffle fresh-deck))})))
 
 (comment
   (let [deck (shuffle fresh-deck)]
