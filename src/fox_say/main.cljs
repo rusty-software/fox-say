@@ -58,7 +58,7 @@
         (do
           ^{:key (rand-int 1000000)}
           [:div d]))
-      [:pre (with-out-str (cljs.pprint/pprint stats))]])
+      [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]])
    ]
   )
 
