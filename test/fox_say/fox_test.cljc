@@ -135,10 +135,22 @@
             (str "should call in late position when raised to you with " hand))))))
 
 (deftest test-low-limit-strategy
-  #_(testing "early"
-    (is (= :raise nil))
-    (is (= :call nil))
-    (is (= :fold nil)))
+  (testing "early"
+    (let [raising-hands [["AS" "AH"] ["JC" "JD"]
+                         ["AS" "KS"] ["AH" "JH"]
+                         ["AS" "KH"] ["AD" "QC"] ["KH" "QH"]]
+          calling-hands [["TS" "TH"] ["7D" "7C"]]]
+      (doseq [hand raising-hands
+              action [:raised :called]]
+            (is (= :raise (fox/action {:game-type :low-limit :position :early :action-to-you action :hand hand}))
+                (str "in low-limit, should raise in early position when " (name action) " to you with " hand)))
+      (doseq [hand calling-hands
+              action [:raised :called]]
+            (is (= :call (fox/action {:game-type :low-limit :position :early :action-to-you action :hand hand}))
+                (str "in low-limit, should call in early position when " (name action) " to you with " hand))))
+
+
+    )
   (testing "middle"
     (testing "called to you"
       (testing "3 or fewer callers"

@@ -104,7 +104,19 @@
    :low-limit {:early {:called {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
                                                                 (styled-cards-from-rank :suited "A" "J")
                                                                 (styled-cards-from-rank :unsuited "A" "Q")
-                                                                [{:suited [13 12]}])}}}
+                                                                [{:suited [13 12]}])}
+                                :call {player-count-na (concat (pairs-for-ranks "T" "7")
+                                                                (styled-cards-from-rank :suited "K" "J")
+                                                                [{:suited [12 11]} {:suited [11 10]} {:suited [14 10]} {:suited [14 9]}
+                                                                 {:unsuited [13 12]}])}}
+                       :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
+                                                                (styled-cards-from-rank :suited "A" "J")
+                                                                (styled-cards-from-rank :unsuited "A" "Q")
+                                                                [{:suited [13 12]}])}
+                                :call {player-count-na (concat (pairs-for-ranks "T" "7")
+                                                                (styled-cards-from-rank :suited "K" "J")
+                                                                [{:suited [12 11]} {:suited [11 10]} {:suited [14 10]} {:suited [14 9]}
+                                                                 {:unsuited [13 12]}])}}}
                :middle {:called {:raise {3 (concat (pairs-for-ranks "A" "8")
                                                    (styled-cards-from-rank :suited "A" "T")
                                                    (styled-cards-from-rank :unsuited "A" "T")
