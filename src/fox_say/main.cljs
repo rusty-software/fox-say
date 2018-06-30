@@ -47,17 +47,14 @@
      [:div
       [:div (str "Position: " position)]
       [:div (str "Action to you: " action-to-you)]
-      [:div {:class "cards"}
-       [:div {:class "card cardAD"}]
-       [:div {:class "card cardKD"}]
+      [:div "Hand: "
+       [:div {:class (str "card card" (first hand))}]
+       [:div {:class (str "card card" (second hand))}]
        ]
-      #_[:div
-       {:class "cards AH"}]
-      [:div
-       (str "Hand: " hand)]
       [:button {:on-click #(raise!)} "Raise"]
       [:button {:on-click #(call!)} "Call"]
       [:button {:on-click #(fold!)} "Fold"]
+      [:hr]
       [:div (str "Chosen action: " chosen-action)]
       [:div (str "Proper action: " correct-action)]
       [:div (str "Result: " result)]
