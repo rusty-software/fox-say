@@ -169,7 +169,7 @@
                                                                  {:suited [11 10]} {:suited [10 8]} {:suited [9 7]} {:suited [8 6]} {:suited [7 5]} {:suited [6 4]} {:suited [5 3]}
                                                                  {:unsuited [12 11]} {:unsuited [11 10]}
                                                                  {:unsuited [13 11]} {:unsuited [12 10]} {:unsuited [13 10]}])}}
-                        #_#_:raised {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
+                        :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
                                                                  (styled-cards-from-rank :suited "A" "Q")
                                                                  (styled-cards-from-rank :unsuited "A" "Q"))}
                                  :call {player-count-na (concat (pairs-for-ranks "T" "9")
