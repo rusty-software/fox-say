@@ -42,7 +42,8 @@
 
 (defn display []
   [:div
-   [:button {:on-click #(deal!)} "Deal"]
+   [:button {:class "myButton"
+             :on-click #(deal!)} "Deal"]
    (let [{:keys [position action-to-you hand chosen-action correct-action result description stats]} @app-state]
      [:div
       [:div (str "Position: " position)]
@@ -51,9 +52,9 @@
        [:div {:class (str "card card" (first hand))}]
        [:div {:class (str "card card" (second hand))}]
        ]
-      [:button {:on-click #(raise!)} "Raise"]
-      [:button {:on-click #(call!)} "Call"]
-      [:button {:on-click #(fold!)} "Fold"]
+      [:button {:class "myButton" :on-click #(raise!)} "Raise"]
+      [:button {:class "myButton" :on-click #(call!)} "Call"]
+      [:button {:class "myButton" :on-click #(fold!)} "Fold"]
       [:hr]
       [:div (str "Chosen action: " chosen-action)]
       [:div (str "Proper action: " correct-action)]
