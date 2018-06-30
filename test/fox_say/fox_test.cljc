@@ -7,6 +7,11 @@
   (is (= [{:pair 4} {:pair 3} {:pair 2}] (fox/pairs-for-ranks "4" "2")))
   (is (= [{:pair 14}] (fox/pairs-for-ranks "A" "A"))))
 
+(deftest test-styled-cards-from-rank
+  (is (= [{:suited [14 13]} {:suited [14 12]} {:suited [14 11]}] (fox/styled-cards-from-rank :suited "A" "J")))
+  (is (= [{:suited [13 12]}] (fox/styled-cards-from-rank :suited "K" "Q")))
+  (is (= [{:unsuited [11 10]}{:unsuited [11 9]}  {:unsuited [11 8]} {:unsuited [11 7]}] (fox/styled-cards-from-rank :unsuited "J" "7"))))
+
 (deftest test-deal
   (let [{:keys [position action-to-you hand]} (fox/deal)]
     (is (fox/positions position))
