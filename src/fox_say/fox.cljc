@@ -143,6 +143,37 @@
                                                                  (styled-cards-from-rank :unsuited "A" "Q"))}
                                  :call {player-count-na (concat (pairs-for-ranks "T" "9")
                                                                 (styled-cards-from-rank :suited "K" "J")
+                                                                [{:suited [14 11]} {:suited [12 11]}])}}}
+               :late {:called {:raise {4 (concat (pairs-for-ranks "A" "8")
+                                                 (styled-cards-from-rank :suited "A" "8")
+                                                 (styled-cards-from-rank :unsuited "A" "9")
+                                                 (styled-cards-from-rank :suited "K" "J")
+                                                 [{:suited [12 11]} {:unsuited [13 12]}])
+                                       player-count-na (concat (pairs-for-ranks "A" "8")
+                                                               (styled-cards-from-rank :suited "A" "8")
+                                                               (styled-cards-from-rank :unsuited "A" "9")
+                                                               (styled-cards-from-rank :suited "K" "J")
+                                                               [{:suited [12 11]} {:unsuited [13 12]}])}
+                                 :call {4 (concat (pairs-for-ranks "7" "5")
+                                                  (styled-cards-from-rank :suited "A" "2")
+                                                  (styled-cards-from-rank :suited "K" "2")
+                                                  [{:suited [10 9]} {:suited [9 8]} {:suited [8 7]} {:suited [7 6]} {:suited [6 5]} {:suited [5 4]}
+                                                   {:suited [12 10]} {:suited [11 10]} {:suited [10 8]} {:suited [9 7]} {:suited [8 6]} {:suited [7 5]}
+                                                   {:unsuited [12 11]} {:unsuited [11 10]}
+                                                   {:unsuited [13 11]} {:unsuited [12 10]} {:unsuited [13 10]}])
+                                        player-count-na (concat (pairs-for-ranks "7" "2")
+                                                                (styled-cards-from-rank :suited "A" "2")
+                                                                (styled-cards-from-rank :suited "K" "2")
+                                                                (styled-cards-from-rank :suited "Q" "2")
+                                                                [{:suited [10 9]} {:suited [9 8]} {:suited [8 7]} {:suited [7 6]} {:suited [6 5]} {:suited [5 4]}
+                                                                 {:suited [11 10]} {:suited [10 8]} {:suited [9 7]} {:suited [8 6]} {:suited [7 5]} {:suited [6 4]} {:suited [5 3]}
+                                                                 {:unsuited [12 11]} {:unsuited [11 10]}
+                                                                 {:unsuited [13 11]} {:unsuited [12 10]} {:unsuited [13 10]}])}}
+                        #_#_:raised {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
+                                                                 (styled-cards-from-rank :suited "A" "Q")
+                                                                 (styled-cards-from-rank :unsuited "A" "Q"))}
+                                 :call {player-count-na (concat (pairs-for-ranks "T" "9")
+                                                                (styled-cards-from-rank :suited "K" "J")
                                                                 [{:suited [14 11]} {:suited [12 11]}])}}}}})
 
 (def proper-action-description
