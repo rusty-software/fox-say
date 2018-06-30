@@ -265,4 +265,17 @@
           (is (= :fold (fox/action {:game-type :low-limit :position :late :action-to-you :raised :hand hand}))
               (str "in low-limit, should fold in late position when raised with " hand))))))
 
-  #_(testing "blinds"))
+  (testing "blinds"
+    (testing "called to you"
+      (let [raising-hands [["AS" "AH"] ["8D" "8C"]
+                          ["AH" "KH"] ["QD" "JD"]
+                          ["AH" "QH"] ["KC" "JC"]
+                          ["AS" "KH"] ["KD" "QC"] ["AS" "QH"]]
+            calling-hands [["8C" "4D"] ["7S" "2H"]]]
+        (doseq [hand raising-hands]
+          (is (= :raise (fox/action {:game-type :low-limit :position :blind :action-to-you :called :hand hand}))
+              (str "in low-limit, should raise in the blind when called with " hand)))
+        (doseq [hand calling-hands]
+          (is (= :call (fox/action {:game-type :low-limit :position :blind :action-to-you :called :hand hand}))
+              (str "in low-limit, should call in late position when raised with " hand)))))
+    ))
