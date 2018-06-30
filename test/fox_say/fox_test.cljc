@@ -18,7 +18,7 @@
     (is (fox/actions-to-you action-to-you))
     (is (= 2 (count hand)))))
 
-(deftest test-early
+#_(deftest test-early
   (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["AC" "KC"] ["AD" "KS"]]
         folding-hands [["AH" "QC"]]]
     (doseq [hand raising-hands]
@@ -28,7 +28,7 @@
       (is (= :fold (fox/action {:position :early :action-to-you :raised :hand hand}))
           (str "should fold early when raised to you with " hand)))))
 
-(deftest test-blinds
+#_(deftest test-blinds
   (testing "called to you"
     (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"] ["9S" "9H"] ["8C" "8D"]
                          ["AD" "KS"] ["AH" "QC"] ["AD" "JC"]]
@@ -63,7 +63,7 @@
         (is (= :fold (fox/action {:position :blind :action-to-you :raised :hand hand}))
             (str "should fold in the blind when raised to you with " hand))))))
 
-(deftest test-middle
+#_(deftest test-middle
   (testing "folded to you"
     (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"] ["9S" "9H"] ["8C" "8D"] ["7H" "7D"]
                          ["AD" "KS"] ["AH" "QC"] ["AD" "JC"]
@@ -100,7 +100,7 @@
         (is (= :fold (fox/action {:position :middle :action-to-you :raised :hand hand}))
             (str "should fold in middle position when raised to you with " hand))))))
 
-(deftest test-late
+#_(deftest test-late
   (testing "folded to you"
     (let [raising-hands [["AH" "AS"] ["TC" "TD"] ["7H" "7D"] ["2S" "2C"]
                          ["AH" "JH"] ["AS" "6S"] ["AC" "2C"]
@@ -134,19 +134,69 @@
         (is (= :call (fox/action {:position :late :action-to-you :raised :hand hand}))
             (str "should call in late position when raised to you with " hand))))))
 
-#_(deftest test-low-limit-strategy
+(deftest test-low-limit-strategy
   #_(testing "early"
     (is (= :raise nil))
     (is (= :call nil))
     (is (= :fold nil)))
   (testing "middle"
-    (testing "3 or fewer callers"
-      (let [raising-hands [["AS" "AH"] ["8C" "8D"]
-                           ["AS" "KH"] ["AC" "TD"]
-                           ["KS" "QH"] ["KC" "JC"]]
-            calling-hands [["7S" "7H"]]
+    (testing "called to you"
+      (testing "3 or fewer callers"
+        (let [raising-hands [["AS" "AH"] ["8C" "8D"]
+                             ["AS" "KH"] ["AC" "TD"]
+                             ["KS" "QH"] ["KC" "JC"]
+                             ["QS" "JS"]]
+              calling-hands [["7S" "7H"] ["5D" "5C"]
+                             ["JS" "TS"] ["9H" "8H"]
+                             ["AD" "2D"] ["KC" "8C"]
+                             ["KS" "JH"] ["QD" "JC"] ["JH" "TD"]]
+              folding-hands [["4S" "4H"]]]
+          (doseq [hand raising-hands]
+            (is (= :raise (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 3 :hand hand}))
+                (str "in low-limit, should raise in the middle when 3 or fewer callers with " hand)))
+          (doseq [hand calling-hands]
+            (is (= :call (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 3 :hand hand}))
+                (str "in low-limit, should call in the middle when 3 or fewer callers with " hand)))
+          (doseq [hand folding-hands]
+            (is (= :fold (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 3 :hand hand}))
+                (str "in low-limit, should fold in the middle when 3 or fewer callers with " hand)))))
+      (testing "4 or more callers"
+        (let [raising-hands [["AS" "AH"] ["8C" "8D"]
+                             ["AS" "KH"] ["AC" "TD"]
+                             ["KS" "QH"] ["KC" "JC"]
+                             ["QS" "JS"]]
+              calling-hands [["7S" "7H"] ["2D" "2C"]
+                             ["JS" "TS"] ["7H" "6H"]
+                             ["AD" "2D"] ["KC" "7C"] ["TH" "8H"]
+                             ["KS" "JH"] ["QD" "JC"] ["JH" "TD"]]
+              folding-hands [["KS" "7H"] ["KD" "6D"]]]
+          (doseq [hand raising-hands]
+            (is (= :raise (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 4 :hand hand}))
+                (str "in low-limit, should raise in the middle when 4 or more callers with " hand)))
+          (doseq [hand calling-hands]
+            (is (= :call (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 4 :hand hand}))
+                (str "in low-limit, should call in the middle when 4 or more callers with " hand)))
+          (doseq [hand folding-hands]
+            (is (= :fold (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 4 :hand hand}))
+                (str "in low-limit, should fold in the middle when 4 or more callers with " hand))))))
+    (testing "raised to you"
+      (let [raising-hands [["AS" "AH"] ["JC" "JD"]
+                           ["AS" "KS"] ["AC" "JC"]
+                           ["AD" "KC"] ["AD" "QC"]]
+            calling-hands [["7S" "7H"] ["5D" "5C"]
+                           ["JS" "TS"] ["9H" "8H"]
+                           ["AD" "2D"] ["KC" "8C"]
+                           ["KS" "JH"] ["QD" "JC"] ["JH" "TD"]]
             folding-hands [["4S" "4H"]]]
         (doseq [hand raising-hands]
-          (is (= :raise (fox/action {:position :middle :action-to-you :called :action-count 3 :hand hand})))))))
-  (testing "late")
-  (testing "blinds"))
+          (is (= :raise (fox/action {:game-type :low-limit :position :middle :action-to-you :raised :hand hand}))
+              (str "in low-limit, should raise in the middle when 3 or fewer callers with " hand)))
+        #_(doseq [hand calling-hands]
+          (is (= :call (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 3 :hand hand}))
+              (str "in low-limit, should call in the middle when 3 or fewer callers with " hand)))
+        #_(doseq [hand folding-hands]
+          (is (= :fold (fox/action {:game-type :low-limit :position :middle :action-to-you :called :action-count 3 :hand hand}))
+              (str "in low-limit, should fold in the middle when 3 or fewer callers with " hand))))
+      ))
+  #_(testing "late")
+  #_(testing "blinds"))
