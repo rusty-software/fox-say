@@ -4,7 +4,7 @@
   #?(:clj  (Integer/parseInt s)
      :cljs (js/parseInt s)))
 
-(def positions #{:utg :blind :middle :late})
+(def positions #{:early :blind :middle :late})
 (def actions-to-you #{:folded :called :raised})
 
 (def fresh-deck
@@ -23,65 +23,70 @@
 (defn suit [[_ s]]
   (str s))
 
+(def player-count-na 100)
+
 (def proper-action
   {:no-limit
-   {:utg {:called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
-                           {:suited [14 13]} {:suited [14 12]}
-                           {:unsuited [14 13]} {:unsuited [14 12]}]}
-          :raised {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11}
-                           {:suited [14 13]}
-                           {:unsuited [14 13]}]}}
+   {:early {:called {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
+                                              {:suited [14 13]} {:suited [14 12]}
+                                              {:unsuited [14 13]} {:unsuited [14 12]}]}}
+            :raised {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11}
+                                              {:suited [14 13]}
+                                              {:unsuited [14 13]}]}}}
 
-    :blind {:called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8}
-                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
-                             {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]
-                     :call [{:suited-connector :any}
-                            {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]} {:suited [11 10]}]}
-            :raised {:raise [{:pair 14} {:pair 13} {:pair 12}
-                             {:suited [14 13]}
-                             {:unsuited [14 13]}]
-                     :call [{:pair 11} {:pair 10} {:pair 9} {:pair 8} {:pair 7} {:pair 6}
-                            {:suited-connector :any}
-                            {:suited-one-gap :any}]}}
+    :blind {:called {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8}
+                                              {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
+                                              {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]}
+                     :call {player-count-na [{:suited-connector :any}
+                                             {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]} {:suited [11 10]}]}}
+            :raised {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12}
+                                              {:suited [14 13]}
+                                              {:unsuited [14 13]}]}
+                     :call {player-count-na [{:pair 11} {:pair 10} {:pair 9} {:pair 8} {:pair 7} {:pair 6}
+                                             {:suited-connector :any}
+                                             {:suited-one-gap :any}]}}}
 
-    :middle {:folded {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8} {:pair 7}
-                              {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}
-                              {:suited [14 10]} {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]}]}
-             :called {:call [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9}
-                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:suited [14 10]}
-                             {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]}
-                             {:suited-connector :any}]}
-             :raised {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
-                              {:suited [14 13]} {:suited [14 12]}
-                              {:unsuited [14 13]} {:unsuited [14 12]}]
-                      :call [{:pair 9} {:pair 8} {:pair 7} {:pair 6} {:pair 5} {:pair 4} {:pair 3} {:pair 2}
-                             {:suited-connector :any}]}}
+    :middle {:folded {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9} {:pair 8} {:pair 7}
+                                               {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}
+                                               {:suited [14 10]} {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]}]}}
+             :called {:call {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10} {:pair 9}
+                                              {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:suited [14 10]}
+                                              {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]}
+                                              {:suited-connector :any}]}}
+             :raised {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
+                                               {:suited [14 13]} {:suited [14 12]}
+                                               {:unsuited [14 13]} {:unsuited [14 12]}]}
+                      :call {player-count-na [{:pair 9} {:pair 8} {:pair 7} {:pair 6} {:pair 5} {:pair 4} {:pair 3} {:pair 2}
+                                              {:suited-connector :any}]}}}
 
-    :late {:folded {:raise [{:pair :any}
-                            {:suited-connector :any}
-                            {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:suited [14 10]} {:suited [14 9]} {:suited [14 8]}
-                            {:suited [14 7]} {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;AXs
-                            {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]} {:unsuited [14 10]} {:unsuited [14 9]} {:unsuited [14 8]} {:unsuited [14 7]} ;;A7o
-                            {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]} {:suited [11 10]} {:unsuited [13 12]} {:unsuited [13 11]}
-                            {:unsuited [13 10]} {:unsuited [12 11]} {:unsuited [12 10]} {:unsuited [11 10]} ;;big cards >= 10
-                            ]}
-           :called {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
-                            {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
-                            {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]
-                    :call [{:pair 9} {:pair 8} {:pair 7} {:pair 6} {:pair 5} {:pair 4} {:pair 3} {:pair 2}
-                           {:suited-connector :any}
-                           {:suited [14 10]} {:suited [14 9]} {:suited [14 8]} {:suited [14 7]} {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;AXs
-                           {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [13 9]}
-                           {:suited [12 11]} {:suited [12 10]} {:suited [12 9]}
-                           {:suited [11 10]} {:suited [11 9]}
-                           {:suited [10 9]}]}
-           :raised {:raise [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
-                            {:suited [14 13]} {:suited [14 12]} {:unsuited [14 13]} {:unsuited [14 12]}]
-                    :call [{:pair 9} {:pair 8} {:pair 7}
-                           {:suited-connector :any}]}}}})
+    :late {:folded {:raise {player-count-na [{:pair :any}
+                                             {:suited-connector :any}
+                                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]} {:suited [14 10]} {:suited [14 9]} {:suited [14 8]}
+                                             {:suited [14 7]} {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;AXs
+                                             {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]} {:unsuited [14 10]} {:unsuited [14 9]} {:unsuited [14 8]} {:unsuited [14 7]} ;;A7o
+                                             {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [12 11]} {:suited [12 10]} {:suited [11 10]} {:unsuited [13 12]} {:unsuited [13 11]}
+                                             {:unsuited [13 10]} {:unsuited [12 11]} {:unsuited [12 10]} {:unsuited [11 10]} ;;big cards >= 10
+                                             ]}}
+           :called {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
+                                             {:suited [14 13]} {:suited [14 12]} {:suited [14 11]}
+                                             {:unsuited [14 13]} {:unsuited [14 12]} {:unsuited [14 11]}]}
+                    :call {player-count-na [{:pair 9} {:pair 8} {:pair 7} {:pair 6} {:pair 5} {:pair 4} {:pair 3} {:pair 2}
+                                            {:suited-connector :any}
+                                            {:suited [14 10]} {:suited [14 9]} {:suited [14 8]} {:suited [14 7]} {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;AXs
+                                            {:suited [13 12]} {:suited [13 11]} {:suited [13 10]} {:suited [13 9]}
+                                            {:suited [12 11]} {:suited [12 10]} {:suited [12 9]}
+                                            {:suited [11 10]} {:suited [11 9]}
+                                            {:suited [10 9]}]}}
+           :raised {:raise {player-count-na [{:pair 14} {:pair 13} {:pair 12} {:pair 11} {:pair 10}
+                                             {:suited [14 13]} {:suited [14 12]} {:unsuited [14 13]} {:unsuited [14 12]}]}
+                    :call {player-count-na [{:pair 9} {:pair 8} {:pair 7}
+                                            {:suited-connector :any}]}}}}
+
+   :low-limit {:middle {:raised {:raise {3 [{:pair 14}]}
+                                 :call {3 [{:pair 7}]}}}}})
 
 (def proper-action-description
-  {:utg {:called {:raise "You should raise UTG when called to you with AA - TT, AK, AQ."}
+  {:early {:called {:raise "You should raise UTG when called to you with AA - TT, AK, AQ."}
          :raised {:raise "You should raise UTG when raised to you with AA - JJ, AK."}}
    :blind {:called {:raise "You should raise in the blind when called to you with AA - 88, or AJ or better."
                     :call "You should call in the blind when called to you with suited connectors or suited cards T or better."}
@@ -151,9 +156,14 @@
       (suited-connector-match hand ranks suited-connectors)
       (suited-one-gap-match hand ranks suited-one-gaps))))
 
-(defn action [{:keys [game-type position action-to-you hand] :or {game-type :no-limit}}]
-  (let [raise-with (get-in proper-action [game-type position action-to-you :raise])
-        call-with (get-in proper-action [game-type position action-to-you :call])]
+(defn action-with [game-type position action-to-you action-count action]
+  (let [action-hands (get-in proper-action [game-type position action-to-you action])
+        action-count (first (filter #(<= action-count %) (keys action-hands)))]
+    (get action-hands action-count)))
+
+(defn action [{:keys [game-type position action-to-you action-count hand] :or {game-type :no-limit action-count player-count-na}}]
+  (let [raise-with (action-with game-type position action-to-you action-count :raise)
+        call-with (action-with game-type position action-to-you action-count :call)]
     (cond
       (actionable-pair? raise-with hand) :raise
       (actionable-non-pair? raise-with hand) :raise
@@ -177,7 +187,7 @@
   (let [position (rand-nth (seq positions))
         action-to-you (rand-nth (seq actions-to-you))]
     (if (and (= :folded action-to-you)
-             (#{:utg :blind} position))
+             (#{:early :blind} position))
       (deal)
       {:position position
        :action-to-you action-to-you

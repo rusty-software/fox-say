@@ -2,28 +2,27 @@
   (:require [clojure.test :refer [deftest testing is]]
             [fox-say.fox :as fox]))
 
-(deftest test-utg
-  (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"] ["AD" "KS"] ["AH" "QC"]]]
-    (doseq [hand raising-hands]
-      (is (= :raise (fox/action {:position :utg :action-to-you :called :hand hand}))
-          (str "should raise utg when called with " hand))))
+(deftest test-deal
+  (let [{:keys [position action-to-you hand]} (fox/deal)]
+    (is (fox/positions position))
+    (is (fox/actions-to-you action-to-you))
+    (is (= 2 (count hand)))))
+
+(deftest test-early
   (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["AD" "KS"]]
         folding-hands [["AH" "QC"]]]
     (doseq [hand raising-hands]
-      (is (= :raise (fox/action {:position :utg :action-to-you :raised :hand hand}))
-          (str "should raise utg when raised to you with " hand)))
+      (is (= :raise (fox/action {:position :early :action-to-you :raised :hand hand}))
+          (str "should raise early when raised to you with " hand)))
     (doseq [hand folding-hands]
-      (is (= :fold (fox/action {:position :utg :action-to-you :raised :hand hand}))
-          (str "should fold utg when raised to you with " hand)))))
+      (is (= :fold (fox/action {:position :early :action-to-you :raised :hand hand}))
+          (str "should fold early when raised to you with " hand)))))
 
 (deftest test-blinds
   (testing "called to you"
     (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"] ["9S" "9H"] ["8C" "8D"]
                          ["AD" "KS"] ["AH" "QC"] ["AD" "JC"]]
-          calling-hands [["AD" "TD"] ["KH" "JH"] ["KS" "TS"] ["QD" "TD"]
-                         ["KC" "QC"] ["QH" "JH"] ["JH" "TH"]
-                         ["9H" "8H"] ["7S" "6S"] ["5D" "4D"] ["3C" "2C"]
-                         ]
+          calling-hands [["AD" "TD"] ["KH" "JH"] ["KS" "TS"] ["QD" "TD"] ["KC" "QC"] ["QH" "JH"] ["JH" "TH"] ["9H" "8H"] ["7S" "6S"] ["5D" "4D"] ["3C" "2C"]]
           folding-hands [["7H" "7D"] ["6S" "6C"]
                          ["AD" "TC"] ["KS" "QC"] ["KD" "JH"] ["KH" "TS"] ["QS" "JH"] ["QC" "TD"] ["JS" "TH"]
                          ["9C" "8H"] ["7H" "6S"] ["5H" "4D"] ["3D" "2C"]]]
@@ -114,7 +113,8 @@
         (is (= :call (fox/action {:position :late :action-to-you :called :hand hand}))
             (str "should call in late position when called to you with " hand)))))
   (testing "raised to you"
-    (let [raising-hands [["AH" "AS"] ["TC" "TD"] ["AH" "KS"] ["AD" "QC"]]
+    (let [raising-hands [["AH" "AS"] ["TC" "TD"] ["AH" "KS"] ["AD" "QC"]
+                         ]
           calling-hands [["9S" "9H"] ["8C" "8D"] ["7H" "7D"]
                          ["KC" "QC"] ["QH" "JH"] ["JH" "TH"] ["9H" "8H"] ["7S" "6S"] ["5D" "4D"] ["3C" "2C"]]]
       (doseq [hand raising-hands]
@@ -124,8 +124,17 @@
         (is (= :call (fox/action {:position :late :action-to-you :raised :hand hand}))
             (str "should call in late position when raised to you with " hand))))))
 
-(deftest test-deal
-  (let [{:keys [position action-to-you hand]} (fox/deal)]
-    (is (fox/positions position))
-    (is (fox/actions-to-you action-to-you))
-    (is (= 2 (count hand)))))
+#_(deftest test-low-limit-strategy
+  #_(testing "early"
+    (is (= :raise nil))
+    (is (= :call nil))
+    (is (= :fold nil)))
+  (testing "middle"
+    (testing "3 or fewer callers"
+      (let [raising-hands [["AS" "AH"]]
+            calling-hands [["7S" "7H"]]
+            folding-hands [["4S" "4H"]]]
+        (doseq [hand raising-hands]
+          (is (= :raise (fox/action {:position :middle :action-to-you :called :action-count 3 :hand hand})))))))
+  (testing "late")
+  (testing "blinds"))
