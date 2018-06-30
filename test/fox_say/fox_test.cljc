@@ -2,6 +2,11 @@
   (:require [clojure.test :refer [deftest testing is]]
             [fox-say.fox :as fox]))
 
+(deftest test-pairs-for-ranks
+  (is (= [{:pair 10} {:pair 9} {:pair 8}] (fox/pairs-for-ranks "T" "8")))
+  (is (= [{:pair 4} {:pair 3} {:pair 2}] (fox/pairs-for-ranks "4" "2")))
+  (is (= [{:pair 14}] (fox/pairs-for-ranks "A" "A"))))
+
 (deftest test-deal
   (let [{:keys [position action-to-you hand]} (fox/deal)]
     (is (fox/positions position))
@@ -9,7 +14,7 @@
     (is (= 2 (count hand)))))
 
 (deftest test-early
-  (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["AD" "KS"]]
+  (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["AC" "KC"] ["AD" "KS"]]
         folding-hands [["AH" "QC"]]]
     (doseq [hand raising-hands]
       (is (= :raise (fox/action {:position :early :action-to-you :raised :hand hand}))
@@ -131,7 +136,9 @@
     (is (= :fold nil)))
   (testing "middle"
     (testing "3 or fewer callers"
-      (let [raising-hands [["AS" "AH"]]
+      (let [raising-hands [["AS" "AH"] ["8C" "8D"]
+                           ["AS" "KH"] ["AC" "TD"]
+                           ["KS" "QH"] ["KC" "JC"]]
             calling-hands [["7S" "7H"]]
             folding-hands [["4S" "4H"]]]
         (doseq [hand raising-hands]
