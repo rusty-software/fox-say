@@ -217,8 +217,8 @@
                      :call {player-count-na "You should call early when called to you with TT - 77, KJs, QJs, JTs, ATs, A9s, KQo."}}
             :raised {:raise {player-count-na "You should raise early when raised to you with AA - JJ, AKs - AQs, AKo - AQo, KQs."}
                      :call {player-count-na "You should call in early position when raised to you with TT - 77, AJs, ATs, A9s, KQs - JTs, KJs, KQo."}}}
-    :middle {:called {:raise {3 "You should raise in middle position when 3 or fewer callers to you with AA - 88, AKs - ATs, AKo - ATo, KQs - KJs, QJs, KQo."
-                              player-count-na "You should raise in middle position when 4 or more callers to you with AA - 88, AKs - ATs, AKo - ATo, KQs - KJs, QJs, KQo."}
+    :middle {:called {:raise {3 "You should raise in middle position when 3 or fewer callers to you with AA - 88, AK - AT, KQs - KJs, QJs, KQo."
+                              player-count-na "You should raise in middle position when 4 or more callers to you with AA - 88, AK - AT, KQs - KJs, QJs, KQo."}
                       :call {3 "You should call in middle position when 3 or fewer callers to you with 77 - 55, AXs, KQs - K8s, T9s, 98s, KJo, QJo, JTo."
                              player-count-na "You should call in middle position when 4 or more callers to you with 77 - 22, AXs, KQs - K7s, T9s - 76s, T8s, KJo, QJo, JTo."}}
              :raised {:raise {player-count-na "You should raise in middle position when raised to you with AA - JJ, AK, AQ."}
@@ -229,9 +229,9 @@
                            player-count-na "You should call in late position when 5 or more callers to you with 77 - 22, JTs - 54s, QTs - 53s, AXs, KXs, QXs, QJo - JTo, KJo - QTo, KTo."}}
            :raised {:raise {player-count-na "You should raise in late position when raised to with AA - JJ, AK, AQ."}
                     :call {player-count-na "You should call in late position when raised to with TT - 77, KQs - QJs, KJs, AJs - A9s."}}}
-    :blind {:called {:raise {player-count-na "You should raise in the blind when called to you with AA - 88, or AJ or better."}
+    :blind {:called {:raise {player-count-na "You should raise in the blind when called to you with AA - 88, AKs - QJs, AQs - KJs, AKo - KQo, AQo."}
                      :call {player-count-na "You should call in the blinds when called to you with anything that costs half a bet."}}
-            :raised {:raise {player-count-na "You should raise in the blind when called to you with AA - 88, or AJ or better."}
+            :raised {:raise {player-count-na "You should raise in the blind when called to you with AA - 88, AKs - QJs, AQs - KJs, AKo - KQo, AQo."}
                      :call {player-count-na "You should NOT call in the blind when raised to you. If you can't raise, you should fold."}}}
     }})
 
@@ -309,9 +309,11 @@
 (defn action-with-description [{:keys [game-type position action-to-you action-count]
                                 :or {game-type :no-limit action-count player-count-na}
                                 :as hand-state}]
+
   (let [correct-action (action hand-state)
         descriptions (get-in proper-action-description [game-type position action-to-you correct-action])
-        description (first (filter #(<= action-count %) (keys descriptions)))
+        description-key (first (filter #(<= action-count %) (keys descriptions)))
+        description (get descriptions description-key)
         description (if (not description)
                       (for [action [:raise :call]]
                         (get-in proper-action-description [game-type position action-to-you action]))
@@ -327,6 +329,7 @@
       (deal)
       {:position position
        :action-to-you action-to-you
+       :action-count (rand-nth (range 3 6))
        :hand (take 2 (shuffle fresh-deck))})))
 
 (comment

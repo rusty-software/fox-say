@@ -5,7 +5,7 @@
 (enable-console-print!)
 
 ;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (reagent/atom {:game-type :no-limit :position nil :action-to-you nil :hand nil
+(defonce app-state (reagent/atom {:game-type :no-limit :position nil :action-to-you nil :action-count nil :hand nil
                                   :chosen-action nil :correct-action nil :result nil :description nil
                                   :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :correct-hands [] :incorrect-hands []}}))
 
@@ -13,8 +13,8 @@
   (swap! app-state assoc :game-type game-type))
 
 (defn deal! []
-  (let [{:keys [position action-to-you hand]} (fox/deal)]
-    (swap! app-state assoc :position position :action-to-you action-to-you :hand hand
+  (let [{:keys [position action-to-you action-count hand]} (fox/deal)]
+    (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand
            :chosen-action nil :correct-action nil :result nil :description nil)))
 
 (defn update-stats [{:keys [position action-to-you hand stats]} action correct-action]
@@ -44,8 +44,10 @@
   (swap! app-state check-proper-action :fold))
 
 (defn display []
-  (let [{:keys [game-type position action-to-you hand chosen-action correct-action result description stats]} @app-state]
+  (let [{:keys [game-type position action-to-you action-count hand
+                chosen-action correct-action result description stats]} @app-state]
     [:div
+     [:h2 "Pre Flop Trainer"]
      [:label
       [:input {:type "radio"
                :name "game-type"
@@ -65,6 +67,7 @@
                :on-click #(deal!)} "Deal"]
      [:div (str "Position: " position)]
      [:div (str "Action to you: " action-to-you)]
+     [:div (str "Action count: " action-count)]
      [:div "Hand: "
       [:div {:class (str "card card" (first hand))}]
       [:div {:class (str "card card" (second hand))}]
