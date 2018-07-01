@@ -187,21 +187,40 @@
                                 :call {player-count-na [:any]}}}}})
 
 (def proper-action-description
-  {:early {:called {:raise "You should raise UTG when called to you with AA - TT, AK, AQ."}
-         :raised {:raise "You should raise UTG when raised to you with AA - JJ, AK."}}
-   :blind {:called {:raise "You should raise in the blind when called to you with AA - 88, or AJ or better."
-                    :call "You should call in the blind when called to you with suited connectors or suited cards T or better."}
-           :raised {:raise "You should raise in the blind when raised to you with AA - QQ, AK."
-                    :call "You should call in the blind when raised to you with suited connectors or suited one gaps, provided you have lots of chips."}}
-   :middle {:folded {:raise "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better."}
-            :called {:call "You should call in the middle when called to you with AA - 99, suited cards QT or better, or suited connectors." }
-            :raised {:raise "You should raise in the middle when raised to you with AA - TT, AK, AQ."
-                     :call "You should call in the middle when raised to you with 99 - 22 or suited connectors."}}
-   :late {:folded {:raise "You should raise in late position when folded to with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."}
-          :called {:raise "You should raise in late position when called to with AA - TT, AK - AJ."
-                   :call "You should call in late position when called to with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."}
-          :raised {:raise "You should raise in late position when raised to with AA - TT, AK, AQ."
-                   :call "You should call in late position when raised to with 99 - 77 or suited connectors."}}})
+  {:no-limit
+   {:early {:called {:raise {player-count-na "You should raise UTG when called to you with AA - TT, AK, AQ."}}
+            :raised {:raise {player-count-na "You should raise UTG when raised to you with AA - JJ, AK."}}}
+    :blind {:called {:raise {player-count-na "You should raise in the blind when called to you with AA - 88, or AJ or better."}
+                     :call {player-count-na "You should call in the blind when called to you with suited connectors or suited cards T or better."}}
+            :raised {:raise {player-count-na "You should raise in the blind when raised to you with AA - QQ, AK."}
+                     :call {player-count-na "You should call in the blind when raised to you with suited connectors or suited one gaps, provided you have lots of chips."}}}
+    :middle {:folded {:raise {player-count-na "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better."}}
+             :called {:call {player-count-na "You should call in the middle when called to you with AA - 99, suited cards QT or better, or suited connectors."}}
+             :raised {:raise {player-count-na "You should raise in the middle when raised to you with AA - TT, AK, AQ."}
+                      :call {player-count-na "You should call in the middle when raised to you with 99 - 22 or suited connectors."}}}
+    :late {:folded {:raise {player-count-na "You should raise in late position when folded to with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."}}
+           :called {:raise {player-count-na "You should raise in late position when called to with AA - TT, AK - AJ."}
+                    :call {player-count-na "You should call in late position when called to with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."}}
+           :raised {:raise {player-count-na "You should raise in late position when raised to with AA - TT, AK, AQ."}
+                    :call {player-count-na "You should call in late position when raised to with 99 - 77 or suited connectors."}}}}
+
+   :low-limit
+   {:early {:called {:raise {player-count-na "You should raise early when called to you with AA - JJ, AKs - AJs, AKo - AQo, KQs."}
+                     :call {player-count-na "You should call early when called to you with TT - 77, KJs, QJs, JTs, ATs, A9s."}}
+            :raised {:raise "You should raise early when raised to you with AA - JJ, AK."}}
+    :blind {:called {:raise "You should raise in the blind when called to you with AA - 88, or AJ or better."
+                     :call "You should call in the blind when called to you with suited connectors or suited cards T or better."}
+            :raised {:raise "You should raise in the blind when raised to you with AA - QQ, AK."
+                     :call "You should call in the blind when raised to you with suited connectors or suited one gaps, provided you have lots of chips."}}
+    :middle {:folded {:raise "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better."}
+             :called {:call "You should call in the middle when called to you with AA - 99, suited cards QT or better, or suited connectors."}
+             :raised {:raise "You should raise in the middle when raised to you with AA - TT, AK, AQ."
+                      :call "You should call in the middle when raised to you with 99 - 22 or suited connectors."}}
+    :late {:folded {:raise "You should raise in late position when folded to with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."}
+           :called {:raise "You should raise in late position when called to with AA - TT, AK - AJ."
+                    :call "You should call in late position when called to with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."}
+           :raised {:raise "You should raise in late position when raised to with AA - TT, AK, AQ."
+                    :call "You should call in late position when raised to with 99 - 77 or suited connectors."}}}})
 
 (defn pair? [hand]
   (apply = (map rank hand)))
@@ -257,6 +276,11 @@
       (suited-connector-match hand ranks suited-connectors)
       (suited-one-gap-match hand ranks suited-one-gaps))))
 
+(defn description-with [game-type position action-to-you action-count action]
+  (let [action-description (get-in proper-action-description [game-type position action-to-you action])
+        action-count (first (filter #(<= action-count %) (keys action-description)))]
+    (get action-description action-count)))
+
 (defn action-with [game-type position action-to-you action-count action]
   (let [action-hands (get-in proper-action [game-type position action-to-you action])
         action-count (first (filter #(<= action-count %) (keys action-hands)))]
@@ -274,14 +298,17 @@
 
       :else :fold)))
 
-(defn action-with-description [{:keys [game-type position action-to-you] :or {game-type :no-limit} :as hand-state}]
-  (let [action (action hand-state)
-        description (get-in proper-action-description [position action-to-you action])
+(defn action-with-description [{:keys [game-type position action-to-you action-count]
+                                :or {game-type :no-limit action-count player-count-na}
+                                :as hand-state}]
+  (let [correct-action (action hand-state)
+        descriptions (get-in proper-action-description [game-type position action-to-you correct-action])
+        description (first (filter #(<= action-count %) (keys descriptions)))
         description (if (not description)
-                      (for [a [:raise :call]]
-                        (get-in proper-action-description [position action-to-you a]))
+                      (for [action [:raise :call]]
+                        (get-in proper-action-description [game-type position action-to-you action]))
                       [description])]
-    {:correct-action action
+    {:correct-action correct-action
      :description description}))
 
 (defn deal []

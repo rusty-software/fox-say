@@ -5,9 +5,12 @@
 (enable-console-print!)
 
 ;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (reagent/atom {:position nil :action-to-you nil :hand nil
+(defonce app-state (reagent/atom {:game-type :no-limit :position nil :action-to-you nil :hand nil
                                   :chosen-action nil :correct-action nil :result nil :description nil
                                   :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :correct-hands [] :incorrect-hands []}}))
+
+(defn set-game-type! [game-type]
+  (swap! app-state assoc :game-type game-type))
 
 (defn deal! []
   (let [{:keys [position action-to-you hand]} (fox/deal)]
@@ -41,30 +44,44 @@
   (swap! app-state check-proper-action :fold))
 
 (defn display []
-  [:div
-   [:button {:class "myButton"
-             :on-click #(deal!)} "Deal"]
-   (let [{:keys [position action-to-you hand chosen-action correct-action result description stats]} @app-state]
-     [:div
-      [:div (str "Position: " position)]
-      [:div (str "Action to you: " action-to-you)]
-      [:div "Hand: "
-       [:div {:class (str "card card" (first hand))}]
-       [:div {:class (str "card card" (second hand))}]
-       ]
-      [:button {:class "myButton" :on-click #(raise!)} "Raise"]
-      [:button {:class "myButton" :on-click #(call!)} "Call"]
-      [:button {:class "myButton" :on-click #(fold!)} "Fold"]
-      [:hr]
-      [:div (str "Chosen action: " chosen-action)]
-      [:div (str "Proper action: " correct-action)]
-      [:div (str "Result: " result)]
-      (for [d description]
-        (do
-          ^{:key (rand-int 1000000)}
-          [:div d]))
-      [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]])
-   ]
+  (let [{:keys [game-type position action-to-you hand chosen-action correct-action result description stats]} @app-state]
+    [:div
+     [:label
+      [:input {:type "radio"
+               :name "game-type"
+               :value :no-limit
+               :checked (= :no-limit game-type)
+               :on-change #(set-game-type! :no-limit)}]
+      "No Limit"]
+     [:label
+      [:input {:type "radio"
+               :name "game-type"
+               :value :low-limit
+               :checked (= :low-limit game-type)
+               :on-change #(set-game-type! :low-limit)}]
+      "Low Limit"]
+     [:br]
+     [:button {:class "myButton"
+               :on-click #(deal!)} "Deal"]
+     [:div (str "Position: " position)]
+     [:div (str "Action to you: " action-to-you)]
+     [:div "Hand: "
+      [:div {:class (str "card card" (first hand))}]
+      [:div {:class (str "card card" (second hand))}]
+      ]
+     [:button {:class "myButton" :on-click #(raise!)} "Raise"]
+     [:button {:class "myButton" :on-click #(call!)} "Call"]
+     [:button {:class "myButton" :on-click #(fold!)} "Fold"]
+     [:hr]
+     [:div (str "Chosen action: " chosen-action)]
+     [:div (str "Proper action: " correct-action)]
+     [:div (str "Result: " result)]
+     (for [d description
+           [_ v] d]
+       (do
+         ^{:key (rand-int 1000000)}
+         [:div v]))
+     [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]])
   )
 
 (reagent/render-component
