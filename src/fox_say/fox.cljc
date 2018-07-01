@@ -114,7 +114,7 @@
                                                                 (styled-cards-from-rank :unsuited "A" "Q"))}
                                 :call {player-count-na (concat (pairs-for-ranks "T" "7")
                                                                (styled-cards-from-rank :suited "K" "J")
-                                                               [{:suited [14 11]} {:suited [13 12]} {:suited [12 11]} {:suited [11 10]} {:suited [14 10]} {:suited [14 9]}
+                                                               [{:suited [12 11]} {:suited [11 10]} {:suited [14 11]} {:suited [14 10]} {:suited [14 9]}
                                                                 {:unsuited [13 12]}])}}}
                :middle {:called {:raise {3 (concat (pairs-for-ranks "A" "8")
                                                    (styled-cards-from-rank :suited "A" "T")
@@ -129,7 +129,8 @@
                                  :call {3 (concat (pairs-for-ranks "7" "5")
                                                   (styled-cards-from-rank :suited "A" "2")
                                                   (styled-cards-from-rank :suited "K" "8")
-                                                  [{:suited [10 9]} {:suited [9 8]}
+                                                  [{:suited [11 10]} {:suited [10 9]} {:suited [9 8]}
+                                                   {:suited [12 10]} {:suited [11 9]}
                                                    {:unsuited [13 11]} {:unsuited [12 11]} {:unsuited [11 10]}])
                                         player-count-na (concat (pairs-for-ranks "7" "2")
                                                                 (styled-cards-from-rank :suited "A" "2")
@@ -205,16 +206,21 @@
 
    :low-limit
    {:early {:called {:raise {player-count-na "You should raise early when called to you with AA - JJ, AKs - AJs, AKo - AQo, KQs."}
-                     :call {player-count-na "You should call early when called to you with TT - 77, KJs, QJs, JTs, ATs, A9s."}}
-            :raised {:raise {player-count-na "You should raise early when raised to you with AA - JJ, AKs - AJ, AKo - AQo, KQs."}}}
+                     :call {player-count-na "You should call early when called to you with TT - 77, KJs, QJs, JTs, ATs, A9s, KQo."}}
+            :raised {:raise {player-count-na "You should raise early when raised to you with AA - JJ, AKs - AQs, AKo - AQo, KQs."}
+                     :call {player-count-na "You should call in early position when raised to you with TT - 77, AJs, ATs, A9s, KQs - JTs, KJs, KQo."}}}
+    :middle {:called {:raise {3 "You should raise in middle position when 3 or fewer callers to you with AA - 88, AKs - ATs, AKo - ATo, KQs - KJs, QJs, KQo."
+                              player-count-na "You should raise in middle position when 4 or more callers to you with AA - 88, AKs - ATs, AKo - ATo, KQs - KJs, QJs, KQo."}
+                      :call {3 "You should call in middle position when 3 or fewer callers to you with 77 - 55, AXs, KQs - K8s, T9s, 98s, KJo, QJo, JTo."
+                             player-count-na ""}}
+             :raised {:raise "You should raise in the middle when raised to you with AA - TT, AK, AQ."
+                      :call "You should call in the middle when raised to you with 99 - 22 or suited connectors."}
+             :folded {:raise "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better."}}
     :blind {:called {:raise "You should raise in the blind when called to you with AA - 88, or AJ or better."
                      :call "You should call in the blind when called to you with suited connectors or suited cards T or better."}
             :raised {:raise "You should raise in the blind when raised to you with AA - QQ, AK."
                      :call "You should call in the blind when raised to you with suited connectors or suited one gaps, provided you have lots of chips."}}
-    :middle {:folded {:raise "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better."}
-             :called {:call "You should call in the middle when called to you with AA - 99, suited cards QT or better, or suited connectors."}
-             :raised {:raise "You should raise in the middle when raised to you with AA - TT, AK, AQ."
-                      :call "You should call in the middle when raised to you with 99 - 22 or suited connectors."}}
+
     :late {:folded {:raise "You should raise in late position when folded to with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."}
            :called {:raise "You should raise in late position when called to with AA - TT, AK - AJ."
                     :call "You should call in late position when called to with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."}
