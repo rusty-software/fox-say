@@ -110,12 +110,11 @@
                                                                [{:suited [12 11]} {:suited [11 10]} {:suited [14 10]} {:suited [14 9]}
                                                                 {:unsuited [13 12]}])}}
                        :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
-                                                                (styled-cards-from-rank :suited "A" "J")
-                                                                (styled-cards-from-rank :unsuited "A" "Q")
-                                                                [{:suited [13 12]}])}
+                                                                (styled-cards-from-rank :suited "A" "Q")
+                                                                (styled-cards-from-rank :unsuited "A" "Q"))}
                                 :call {player-count-na (concat (pairs-for-ranks "T" "7")
                                                                (styled-cards-from-rank :suited "K" "J")
-                                                               [{:suited [12 11]} {:suited [11 10]} {:suited [14 10]} {:suited [14 9]}
+                                                               [{:suited [14 11]} {:suited [13 12]} {:suited [12 11]} {:suited [11 10]} {:suited [14 10]} {:suited [14 9]}
                                                                 {:unsuited [13 12]}])}}}
                :middle {:called {:raise {3 (concat (pairs-for-ranks "A" "8")
                                                    (styled-cards-from-rank :suited "A" "T")
@@ -207,7 +206,7 @@
    :low-limit
    {:early {:called {:raise {player-count-na "You should raise early when called to you with AA - JJ, AKs - AJs, AKo - AQo, KQs."}
                      :call {player-count-na "You should call early when called to you with TT - 77, KJs, QJs, JTs, ATs, A9s."}}
-            :raised {:raise "You should raise early when raised to you with AA - JJ, AK."}}
+            :raised {:raise {player-count-na "You should raise early when raised to you with AA - JJ, AKs - AJ, AKo - AQo, KQs."}}}
     :blind {:called {:raise "You should raise in the blind when called to you with AA - 88, or AJ or better."
                      :call "You should call in the blind when called to you with suited connectors or suited cards T or better."}
             :raised {:raise "You should raise in the blind when raised to you with AA - QQ, AK."
