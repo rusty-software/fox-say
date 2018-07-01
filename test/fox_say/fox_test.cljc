@@ -12,6 +12,12 @@
   (is (= [{:suited [13 12]}] (fox/styled-cards-from-rank :suited "K" "Q")))
   (is (= [{:unsuited [11 10]}{:unsuited [11 9]}  {:unsuited [11 8]} {:unsuited [11 7]}] (fox/styled-cards-from-rank :unsuited "J" "7"))))
 
+(deftest test-styled-connectors-from-rank
+  (is (= [{:suited-connector [10 9]} {:suited-connector [9 8]} {:suited-connector [8 7]}] (fox/styled-connectors-from-rank :suited "T" "8")))
+  (is (= [{:unsuited-connector [10 9]}] (fox/styled-connectors-from-rank :unsuited "T" "T")))
+  (is (= [{:suited-connector [3 2]}] (fox/styled-connectors-from-rank :suited "3" "2")))
+  )
+
 (deftest test-deal
   (let [{:keys [position action-to-you hand]} (fox/deal)]
     (is (fox/positions position))
