@@ -29,7 +29,7 @@
         (assoc :incorrect-hands (conj (:incorrect-hands stats) {:position position :action-to-you action-to-you :hand hand :chosen-action action :correct-action correct-action})))))
 
 (defn check-proper-action [state action]
-  (let [{:keys [correct-action description]} (fox/action-with-description @app-state)
+  (let [{:keys [correct-action description] :as r} (fox/action-with-description @app-state)
         result (if (= action correct-action) :correct :incorrect)
         updated-stats (update-stats state action correct-action)]
     (assoc state :chosen-action action :correct-action correct-action :result result :description description :stats updated-stats)))
@@ -70,8 +70,7 @@
      [:div (str "Action count: " action-count)]
      [:div "Hand: "
       [:div {:class (str "card card" (first hand))}]
-      [:div {:class (str "card card" (second hand))}]
-      ]
+      [:div {:class (str "card card" (second hand))}]]
      [:button {:class "myButton" :on-click #(raise!)} "Raise"]
      [:button {:class "myButton" :on-click #(call!)} "Call"]
      [:button {:class "myButton" :on-click #(fold!)} "Fold"]
@@ -84,7 +83,8 @@
        (do
          ^{:key (rand-int 1000000)}
          [:div v]))
-     [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]])
+     [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]
+     #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
   )
 
 (reagent/render-component

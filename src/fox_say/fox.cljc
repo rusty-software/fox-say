@@ -202,7 +202,7 @@
                      :call {player-count-na "You should call in the blind when called to you with suited connectors or suited cards T or better."}}
             :raised {:raise {player-count-na "You should raise in the blind when raised to you with AA - QQ, AK."}
                      :call {player-count-na "You should call in the blind when raised to you with suited connectors or suited one gaps, provided you have lots of chips."}}}
-    :middle {:folded {:raise {player-count-na "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better."}}
+    :middle {:folded {:raise {player-count-na "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better. DON'T LIMP!"}}
              :called {:call {player-count-na "You should call in the middle when called to you with AA - 99, suited cards QT or better, or suited connectors."}}
              :raised {:raise {player-count-na "You should raise in the middle when raised to you with AA - TT, AK, AQ."}
                       :call {player-count-na "You should call in the middle when raised to you with 99 - 22 or suited connectors."}}}
@@ -222,7 +222,7 @@
                       :call {3 "You should call in middle position when 3 or fewer callers to you with 77 - 55, AXs, KQs - K8s, T9s, 98s, KJo, QJo, JTo."
                              player-count-na "You should call in middle position when 4 or more callers to you with 77 - 22, AXs, KQs - K7s, T9s - 76s, T8s, KJo, QJo, JTo."}}
              :raised {:raise {player-count-na "You should raise in middle position when raised to you with AA - JJ, AK, AQ."}
-                      :call {player-count-na "You should call in middle position when raised to you with TT - 77, AJs, ATs, KQs - QJs, KJs."}}}
+                      :call {player-count-na "You should call in middle position when raised to you with TT - 99, AJs, ATs, KQs - QJs, KJs."}}}
     :late {:called {:raise {4 "You should raise in late position when called to with AA - 88, AK - A9, KQ, A8s, KJs, QJs, KQo."
                             player-count-na "You should raise in late position when called to with AA - 88, AK - A9, KQ, A8s, KJs, QJs, KQo."}
                     :call {4 "You should call in late position when 4 or fewer callers to you with 77 - 55, JTs - 54s, QTs - 75s, AXs, KXs, QJo - JTo, KJo - QTo, KTo."
@@ -317,7 +317,7 @@
         description (if (not description)
                       (for [action [:raise :call]]
                         (get-in proper-action-description [game-type position action-to-you action]))
-                      [description])]
+                      [{player-count-na description}])]
     {:correct-action correct-action
      :description description}))
 
