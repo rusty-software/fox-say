@@ -61,7 +61,7 @@
                                              {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 10]}]}}
             :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "Q")
                                                      [{:suited [14 13]} {:unsuited [14 13]}])}
-                     :call {player-count-na (concat (pairs-for-ranks "J" "6")
+                     :call {player-count-na (concat (pairs-for-ranks "J" "7")
                                                     [{:suited-connector :any}
                                                      {:suited-one-gap :any}])}}}
 
