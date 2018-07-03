@@ -201,7 +201,7 @@
     :blind {:called {:raise {player-count-na "You should raise in the blind when called to you with AA - 88, or AJ or better."}
                      :call {player-count-na "You should call in the blind when called to you with suited connectors or suited cards T or better."}}
             :raised {:raise {player-count-na "You should raise in the blind when raised to you with AA - QQ, AK."}
-                     :call {player-count-na "You should call in the blind when raised to you with suited connectors or suited one gaps, provided you have lots of chips."}}}
+                     :call {player-count-na "You should call in the blind when raised to you with JJ - 77, suited connectors or suited one gaps, provided you have lots of chips."}}}
     :middle {:folded {:raise {player-count-na "You should raise in the middle when folded to you with AA - 77, AK - AJ, or suited cards QT or better. DON'T LIMP!"}}
              :called {:call {player-count-na "You should call in the middle when called to you with AA - 99, suited cards QT or better, or suited connectors."}}
              :raised {:raise {player-count-na "You should raise in the middle when raised to you with AA - TT, AK, AQ."}
