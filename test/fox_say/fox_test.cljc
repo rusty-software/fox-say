@@ -25,14 +25,16 @@
     (is (= 2 (count hand)))))
 
 (deftest test-early
-  (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["AC" "KC"] ["AD" "KS"]]
-        folding-hands [["AH" "QC"]]]
-    (doseq [hand raising-hands]
-      (is (= :raise (fox/action {:position :early :action-to-you :raised :hand hand}))
-          (str "should raise early when raised to you with " hand)))
-    (doseq [hand folding-hands]
-      (is (= :fold (fox/action {:position :early :action-to-you :raised :hand hand}))
-          (str "should fold early when raised to you with " hand)))))
+  (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TH"] ["AC" "KC"] ["AD" "KS"] ["AS" "QD"]]
+        folding-hands [["AH" "JH"]]]
+    (doseq [hand raising-hands
+            action-to-you [:called :raised]]
+      (is (= :raise (fox/action {:position :early :action-to-you action-to-you :hand hand}))
+          (str "should raise early when " (name action-to-you) " to you with " hand)))
+    (doseq [hand folding-hands
+            action-to-you [:called :raised]]
+      (is (= :fold (fox/action {:position :early :action-to-you action-to-you :hand hand}))
+          (str "should fold early when " (name action-to-you) " to you with " hand)))))
 
 (deftest test-blinds
   (testing "called to you"
@@ -81,12 +83,17 @@
         (is (= :raise (fox/action {:position :middle :action-to-you :folded :hand hand}))
             (str "should raise in middle when folded to you with " hand)))
       (doseq [hand folding-hands]
-        (is (= :fold (fox/action {:position :middle :action-to-you :called :hand hand}))
+        (is (= :fold (fox/action {:position :middle :action-to-you :folded :hand hand}))
             (str "should fold in middle when folded to you with " hand)))))
   (testing "called to you"
-    (let [calling-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"] ["9S" "9H"]
-                         ["AC" "KC"] ["AC" "QC"] ["AC" "JC"] ["AC" "TC"] ["AC" "QC"] ["AC" "JC"] ["AC" "TC"] ["QH" "JH"] ["QH" "TH"]
+    (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TC"]
+                         ["AD" "KS"] ["AH" "QC"] ["AD" "JC"]
+                         ["AC" "KC"] ["AC" "QC"] ["AC" "JC"] ["AC" "QD"] ["AC" "JD"]]
+          calling-hands [["9S" "9H"] ["2C" "2D"] ["QH" "TH"]
                          ["KC" "QC"] ["QH" "JH"] ["JH" "TH"] ["9H" "8H"] ["7S" "6S"] ["5D" "4D"] ["3C" "2C"]]]
+      (doseq [hand raising-hands]
+        (is (= :raise (fox/action {:position :middle :action-to-you :called :hand hand}))
+            (str "should raise in middle when called to you with " hand)))
       (doseq [hand calling-hands]
         (is (= :call (fox/action {:position :middle :action-to-you :called :hand hand}))
             (str "should call in middle when called to you with " hand)))))
@@ -321,3 +328,51 @@
         (doseq [hand folding-hands]
           (is (= :fold (fox/action {:game-type :low-limit :position :blind :action-to-you :raised :hand hand}))
               (str "in low-limit, should fold in late position when raised with " hand)))))))
+
+(deftest test-action-with-description
+  (testing "early"
+    (is (= {:correct-action :raise
+            :description "In early position, when called or raised to you, you should raise with AA - TT, AK, AQ."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :early
+                                         :action-to-you :raised
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]}))))
+  (testing "blinds"
+    (is (= {:correct-action :raise
+            :description "In the blind, when called to you, you should raise with AA - 88, or AJ or better. You should call with suited connectors or suited big cards (T or better)."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :blind
+                                         :action-to-you :called
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]})))
+    (is (= {:correct-action :raise
+            :description "In the blind, when raised to you, you raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :blind
+                                         :action-to-you :raised
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]}))))
+
+  #_(testing "middle"
+    (is (= {:correct-action :raise
+            :description "In middle position, when folded to you, you should raise with AA - 77, AK - AJ, or suited cards QT or better. DON’T LIMP!"}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :middle
+                                         :action-to-you :folded
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]})))
+    (is (= {:correct-action :call
+            :description "In middle position, when called to you, you should call with AA - 99, suited cards QT or better, or suited connectors."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :middle
+                                         :action-to-you :called
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]})))
+    (is (= {:correct-action :raise
+            :description "In the blind, when raised to you, you raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :middle
+                                         :action-to-you :raised
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]})))))
