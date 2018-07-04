@@ -206,14 +206,11 @@
     :blind {:called "In the blind, when called to you, you should raise with AA - 88, or AJ or better. You should call with suited connectors or suited big cards (T or better)."
             :raised "In the blind, when raised to you, you raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
     :middle {:folded "In middle position, when folded to you, you should raise with AA - 77, AK - AJ, or suited cards QT or better. DON’T LIMP!"
-             :called "In middle position, when called to you, you should call with AA - 99, suited cards QT or better, or suited connectors."
-             :raised {:raise {player-count-na "You should raise in the middle when raised to you with AA - TT, AK, AQ."}
-                      :call {player-count-na "You should call in the middle when raised to you with 99 - 22 or suited connectors."}}}
-    :late {:folded {:raise {player-count-na "You should raise in late position when folded to with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."}}
-           :called {:raise {player-count-na "You should raise in late position when called to with AA - TT, AK - AJ."}
-                    :call {player-count-na "You should call in late position when called to with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."}}
-           :raised {:raise {player-count-na "You should raise in late position when raised to with AA - TT, AK, AQ."}
-                    :call {player-count-na "You should call in late position when raised to with 99 - 77 or suited connectors."}}}}
+             :called "In middle position, when called to you, you should raise with AA - TT, AK - AJ. You should call with 99 - 22, suited cards QT or better, or suited connectors."
+             :raised "In middle position, when raised to you, you should raise with AA - TT, AK, AQ. You should call with 99 - 22 or suited connectors."}
+    :late {:folded "In late position, when folded to you, you should raise with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."
+           :called "In late position, when called to you, you should raise with AA - TT, AK - AJ. You should call with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."
+           :raised "In late position, when raised to you, you should raise with AA - TT, AK, AQ. You should call with 99 - 77 or suited connectors."}}
 
    :low-limit
    {:early {:called {:raise {player-count-na "You should raise early when called to you with AA - JJ, AKs - AJs, AKo - AQo, KQs."}

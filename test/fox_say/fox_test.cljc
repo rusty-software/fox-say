@@ -353,8 +353,7 @@
                                          :action-to-you :raised
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]}))))
-
-  #_(testing "middle"
+  (testing "middle"
     (is (= {:correct-action :raise
             :description "In middle position, when folded to you, you should raise with AA - 77, AK - AJ, or suited cards QT or better. DON’T LIMP!"}
            (fox/action-with-description {:game-type :no-limit
@@ -363,16 +362,38 @@
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))
     (is (= {:correct-action :call
-            :description "In middle position, when called to you, you should call with AA - 99, suited cards QT or better, or suited connectors."}
+            :description "In middle position, when called to you, you should raise with AA - TT, AK - AJ. You should call with 99 - 22, suited cards QT or better, or suited connectors."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :middle
                                          :action-to-you :called
                                          :action-count fox/player-count-na
-                                         :hand ["AS" "AH"]})))
+                                         :hand ["9S" "9H"]})))
     (is (= {:correct-action :raise
-            :description "In the blind, when raised to you, you raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
+            :description "In middle position, when raised to you, you should raise with AA - TT, AK, AQ. You should call with 99 - 22 or suited connectors."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :middle
+                                         :action-to-you :raised
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]}))))
+  (testing "late"
+    (is (= {:correct-action :raise
+            :description "In late position, when folded to you, you should raise with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :late
+                                         :action-to-you :folded
+                                         :action-count fox/player-count-na
+                                         :hand ["AS" "AH"]})))
+    (is (= {:correct-action :call
+            :description "In late position, when called to you, you should raise with AA - TT, AK - AJ. You should call with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :late
+                                         :action-to-you :called
+                                         :action-count fox/player-count-na
+                                         :hand ["9S" "9H"]})))
+    (is (= {:correct-action :raise
+            :description "In late position, when raised to you, you should raise with AA - TT, AK, AQ. You should call with 99 - 77 or suited connectors."}
+           (fox/action-with-description {:game-type :no-limit
+                                         :position :late
                                          :action-to-you :raised
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))))
