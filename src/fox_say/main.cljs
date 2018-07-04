@@ -78,11 +78,7 @@
      [:div (str "Chosen action: " chosen-action)]
      [:div (str "Proper action: " correct-action)]
      [:div (str "Result: " result)]
-     (for [d description
-           [_ v] d]
-       (do
-         ^{:key (rand-int 1000000)}
-         [:div v]))
+     [:div description]
      [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]
      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
   )
