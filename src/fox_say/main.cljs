@@ -65,8 +65,10 @@
      [:br]
      [:button {:class "myButton"
                :on-click #(deal!)} "Deal"]
-     [:div (str "Position: " position)]
-     [:div (str "Action to you: " action-to-you)]
+     [:div "Position: "
+      [:strong (when position (name position))]]
+     [:div "Action to you: "
+      [:strong (when action-to-you (name action-to-you))]]
      [:div (str "Action count: " action-count)]
      [:div "Hand: "
       [:div {:class (str "card card" (first hand))}]
@@ -75,9 +77,9 @@
      [:button {:class "myButton" :on-click #(call!)} "Call"]
      [:button {:class "myButton" :on-click #(fold!)} "Fold"]
      [:hr]
-     [:div (str "Chosen action: " chosen-action)]
-     [:div (str "Proper action: " correct-action)]
-     [:div (str "Result: " result)]
+     [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
+     [:div (str "Proper action: " (when correct-action (name correct-action)))]
+     [:div (str "Result: " (when result (name result)))]
      [:div description]
      [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]
      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
