@@ -7,7 +7,7 @@
 ;; define your app data so that it doesn't get over-written on reload
 (defonce app-state (reagent/atom {:game-type :no-limit :position nil :action-to-you nil :action-count nil :hand nil
                                   :chosen-action nil :correct-action nil :result nil :description nil
-                                  :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :correct-hands [] :incorrect-hands []}}))
+                                  :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :fold 0 :call 0 :raise 0}}))
 
 (defn set-game-type! [game-type]
   (swap! app-state assoc :game-type game-type))
@@ -17,16 +17,16 @@
     (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand
            :chosen-action nil :correct-action nil :result nil :description nil)))
 
-(defn update-stats [{:keys [position action-to-you hand stats]} action correct-action]
+(defn update-stats [{:keys [stats]} action correct-action]
   (if (= action correct-action)
     (-> stats
         (update :hand-count inc)
-        (update :correct-count inc)
-        (assoc :correct-hands (conj (:correct-hands stats) {:position position :action-to-you action-to-you :hand hand :chosen-action action})))
+        (update correct-action inc)
+        (update :correct-count inc))
     (-> stats
         (update :hand-count inc)
-        (update :incorrect-count inc)
-        (assoc :incorrect-hands (conj (:incorrect-hands stats) {:position position :action-to-you action-to-you :hand hand :chosen-action action :correct-action correct-action})))))
+        (update correct-action inc)
+        (update :incorrect-count inc))))
 
 (defn check-proper-action [state action]
   (let [{:keys [correct-action description] :as r} (fox/action-with-description @app-state)
@@ -81,7 +81,7 @@
      [:div (str "Proper action: " (when correct-action (name correct-action)))]
      [:div (str "Result: " (when result (name result)))]
      [:div description]
-     [:pre (with-out-str (cljs.pprint/pprint (dissoc stats :correct-hands :incorrect-hands)))]
+     [:pre (with-out-str (cljs.pprint/pprint stats))]
      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
   )
 
