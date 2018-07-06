@@ -107,3 +107,19 @@ body {
 .card.cardJD { background: url(../img/cards.png) -730px -293px; }
 .card.cardQD { background: url(../img/cards.png) -803px -293px; }
 .card.cardKD { background: url(../img/cards.png) -876px -293px; }
+
+.check-mark {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  background: url(../img/check-mark.png);
+}
+
+.x-mark {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  background: url(../img/x-mark.png);
+}

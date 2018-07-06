@@ -72,14 +72,21 @@
      [:div (str "Action count: " action-count)]
      [:div "Hand: "
       [:div {:class (str "card card" (first hand))}]
-      [:div {:class (str "card card" (second hand))}]]
+      [:div {:class (str "card card" (second hand))}]
+      (when result
+        (if (= :correct result)
+          [:div {:class "check-mark"}]
+          [:div {:class "x-mark"}]))]
      [:button {:class "myButton" :on-click #(raise!)} "Raise"]
      [:button {:class "myButton" :on-click #(call!)} "Call"]
      [:button {:class "myButton" :on-click #(fold!)} "Fold"]
      [:hr]
      [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
      [:div (str "Proper action: " (when correct-action (name correct-action)))]
-     [:div (str "Result: " (when result (name result)))]
+     [:div "Result: " (when result
+                        (if (not= :correct result)
+                          [:h3 (name result)]
+                          [:span (name result)]))]
      [:div description]
      [:pre (with-out-str (cljs.pprint/pprint stats))]
      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
