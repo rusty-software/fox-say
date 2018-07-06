@@ -253,9 +253,11 @@
 (defn hand-ranks [hand]
   (sort > (map rank hand)))
 
-(defn suited-connector? [hand ranks]
+(defn suited-connector? [hand [r1 r2]]
   (and (suited? hand)
-       (= (first ranks) (inc (second ranks)))))
+       (or
+         (= r1 (inc r2))
+         (and (= 14 r1) (= 2 r2)))))
 
 (defn suited-rank-match [hand ranks suited-ranks]
   (and (suited? hand) (some #(= ranks %) suited-ranks)))

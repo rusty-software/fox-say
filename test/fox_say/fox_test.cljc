@@ -15,8 +15,16 @@
 (deftest test-styled-connectors-from-rank
   (is (= [{:suited-connector [10 9]} {:suited-connector [9 8]} {:suited-connector [8 7]}] (fox/styled-connectors-from-rank :suited "T" "8")))
   (is (= [{:unsuited-connector [10 9]}] (fox/styled-connectors-from-rank :unsuited "T" "T")))
-  (is (= [{:suited-connector [3 2]}] (fox/styled-connectors-from-rank :suited "3" "2")))
-  )
+  (is (= [{:suited-connector [3 2]}] (fox/styled-connectors-from-rank :suited "3" "2"))))
+
+(deftest test-suited-connector?
+  (is (fox/suited-connector? ["AH" "KH"] [14 13]))
+  (is (fox/suited-connector? ["KH" "QH"] [13 12]))
+  (is (fox/suited-connector? ["3H" "2H"] [3 2]))
+  (is (fox/suited-connector? ["AH" "2H"] [14 2]))
+  (is (not (fox/suited-connector? ["AH" "3H"] [14 3])))
+  (is (not (fox/suited-connector? ["KH" "JH"] [13 11])))
+  (is (not (fox/suited-connector? ["AH" "KS"] [14 13]))))
 
 (deftest test-deal
   (let [{:keys [position action-to-you hand]} (fox/deal)]
