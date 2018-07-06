@@ -110,16 +110,16 @@ body {
 
 .check-mark {
   display: inline-block;
-  width: 100px;
-  height: 100px;
+  width: 98px;
+  height: 98px;
   margin: 10px;
   background: url(../img/check-mark.png);
 }
 
 .x-mark {
   display: inline-block;
-  width: 100px;
-  height: 100px;
+  width: 98px;
+  height: 98px;
   margin: 10px;
   background: url(../img/x-mark.png);
 }
