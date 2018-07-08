@@ -87,7 +87,11 @@
                         (if (not= :correct result)
                           [:h3 (name result)]
                           [:span (name result)]))]
-     [:div description]
+     [:div description stats]
+     [:hr]
+     (for [[k v] stats]
+       ^{:key (rand-int 1000000)}
+       [:pre (str k ": " v)])
      #_[:pre (with-out-str (cljs.pprint/pprint stats))]
      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
   )
