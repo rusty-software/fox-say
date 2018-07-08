@@ -48,52 +48,63 @@
                 chosen-action correct-action result description stats]} @app-state]
     [:div
      [:h2 "Pre Flop Trainer"]
-     [:label
-      [:input {:type "radio"
-               :name "game-type"
-               :value :no-limit
-               :checked (= :no-limit game-type)
-               :on-change #(set-game-type! :no-limit)}]
-      "No Limit"]
-     [:label
-      [:input {:type "radio"
-               :name "game-type"
-               :value :low-limit
-               :checked (= :low-limit game-type)
-               :on-change #(set-game-type! :low-limit)}]
-      "Low Limit"]
-     [:br]
-     [:button {:class "myButton"
-               :on-click #(deal!)} "Deal"]
-     [:div "Position: "
-      [:strong (when position (name position))]]
-     [:div "Action to you: "
-      [:strong (when action-to-you (name action-to-you))]]
-     [:div (str "Action count: " action-count)]
-     [:div "Hand: "
-      [:div {:class (str "card card" (first hand))}]
-      [:div {:class (str "card card" (second hand))}]
-      (when result
-        (if (= :correct result)
-          [:div {:class "check-mark"}]
-          [:div {:class "x-mark"}]))]
-     [:button {:class "myButton" :on-click #(raise!)} "Raise"]
-     [:button {:class "myButton" :on-click #(call!)} "Call"]
-     [:button {:class "myButton" :on-click #(fold!)} "Fold"]
-     [:hr]
-     [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
-     [:div (str "Proper action: " (when correct-action (name correct-action)))]
-     [:div "Result: " (when result
-                        (if (not= :correct result)
-                          [:h3 (name result)]
-                          [:span (name result)]))]
-     [:div description]
-     [:hr]
-     (for [[k v] stats]
-       ^{:key (rand-int 1000000)}
-       [:pre (str k ": " v)])
-     #_[:pre (with-out-str (cljs.pprint/pprint stats))]
-     #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
+     [:form
+      {:on-submit (fn [e]
+                    (.preventDefault e))
+       :on-key-press (fn [e]
+                       (case (.-key e)
+                         "d" (deal!)
+                         "r" (raise!)
+                         "c" (call!)
+                         "f" (fold!)
+                         "pressed something i don't care about"))}
+      [:label
+       [:input {:type "radio"
+                :name "game-type"
+                :value :no-limit
+                :checked (= :no-limit game-type)
+                :on-change #(set-game-type! :no-limit)}]
+       "No Limit"]
+      [:label
+       [:input {:type "radio"
+                :name "game-type"
+                :value :low-limit
+                :checked (= :low-limit game-type)
+                :on-change #(set-game-type! :low-limit)}]
+       "Low Limit"]
+      [:br]
+      [:button {:class "myButton"
+                :on-click #(deal!)} "Deal"]
+      [:div "Position: "
+       [:strong (when position (name position))]]
+      [:div "Action to you: "
+       [:strong (when action-to-you (name action-to-you))]]
+      [:div (str "Action count: " action-count)]
+      [:div "Hand: "
+       [:div {:class (str "card card" (first hand))}]
+       [:div {:class (str "card card" (second hand))}]
+       (when result
+         (if (= :correct result)
+           [:div {:class "check-mark"}]
+           [:div {:class "x-mark"}]))]
+      [:button {:class "myButton" :on-click #(raise!)} "Raise"]
+      [:button {:class "myButton" :on-click #(call!)} "Call"]
+      [:button {:class "myButton" :on-click #(fold!)} "Fold"]
+      [:hr]
+      [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
+      [:div (str "Proper action: " (when correct-action (name correct-action)))]
+      [:div "Result: " (when result
+                         (if (not= :correct result)
+                           [:h3 (name result)]
+                           [:span (name result)]))]
+      [:div description]
+      [:hr]
+      (for [[k v] stats]
+        ^{:key (rand-int 1000000)}
+        [:pre (str k ": " v)])
+      #_[:pre (with-out-str (cljs.pprint/pprint stats))]
+      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]]
+    ])
   )
 
 (reagent/render-component
