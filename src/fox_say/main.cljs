@@ -88,7 +88,7 @@
                           [:h3 (name result)]
                           [:span (name result)]))]
      [:div description]
-     [:pre (with-out-str (cljs.pprint/pprint stats))]
+     #_[:pre (with-out-str (cljs.pprint/pprint stats))]
      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]])
   )
 
