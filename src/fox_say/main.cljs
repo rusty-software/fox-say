@@ -87,7 +87,7 @@
                         (if (not= :correct result)
                           [:h3 (name result)]
                           [:span (name result)]))]
-     [:div description stats]
+     [:div description]
      [:hr]
      (for [[k v] stats]
        ^{:key (rand-int 1000000)}
