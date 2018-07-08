@@ -6,5 +6,5 @@ cd resources/public
 git init
 git add .
 git commit -m "Deploy to GitHub Pages"
-git push --force --quiet "git@github.com:timothypratley/whip.git" master:gh-pages
+git push --force --quiet "git@github.com:rusty-software/fox-say.git" master:gh-pages
 rm -fr .git
