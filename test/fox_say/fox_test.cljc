@@ -355,7 +355,7 @@
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))
     (is (= {:correct-action :raise
-            :description "In the blind, when raised to you, you raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
+            :description "In the blind, when raised to you, you should raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :blind
                                          :action-to-you :raised
