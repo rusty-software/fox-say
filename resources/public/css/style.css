@@ -123,3 +123,18 @@ body {
   margin: 10px;
   background: url(../img/x-mark.png);
 }
+
+.correct, .incorrect  {
+  margin: 1px 0px;
+  padding:1px;
+}
+
+.correct {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+
+.incorrect {
+  color: #D8000C;
+  background-color: #FFD2D2;
+}

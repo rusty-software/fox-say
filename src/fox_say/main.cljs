@@ -1,6 +1,7 @@
 (ns fox-say.main
     (:require [reagent.core :as reagent]
-              [fox-say.fox :as fox]))
+              [fox-say.fox :as fox]
+              [cljs.pprint :as pprint]))
 
 (enable-console-print!)
 
@@ -93,16 +94,17 @@
       [:hr]
       [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
       [:div (str "Proper action: " (when correct-action (name correct-action)))]
+
       [:div "Result: " (when result
                          (if (not= :correct result)
-                           [:h3 (name result)]
-                           [:span (name result)]))]
+                           [:span {:class "incorrect"} (name result)]
+                           [:span {:class "correct"} (name result)]))]
       [:div description]
       [:hr]
-      (for [[k v] stats]
-        ^{:key (rand-int 1000000)}
-        [:pre (str k ": " v)])
-      #_[:pre (with-out-str (cljs.pprint/pprint stats))]
+      [:pre
+       (for [[k v] stats]
+         (str k ": " v "; "))]
+      #_[:pre (with-out-str (pprint/pprint stats))]
       #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]]
     ])
   )
