@@ -75,6 +75,7 @@
        "Low Limit"]
       [:br]
       [:button {:class "myButton"
+                :auto-focus true
                 :on-click #(deal!)} "Deal"]
       [:div "Position: "
        [:strong (when position (name position))]]
