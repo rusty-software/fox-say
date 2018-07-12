@@ -270,9 +270,11 @@
        (or (= :any (first suited-connectors))
            (some #(= ranks %) suited-connectors))))
 
-(defn suited-one-gap? [hand ranks]
+(defn suited-one-gap? [hand [r1 r2]]
   (and (suited? hand)
-       (= (first ranks) (+ 2 (second ranks)))))
+       (or
+         (= r1 (+ 2 r2))
+         (and (= 14 r1) (= 3 r2)))))
 
 (defn suited-one-gap-match [hand ranks suited-one-gaps]
   (and (suited-one-gap? hand ranks)

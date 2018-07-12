@@ -26,6 +26,14 @@
   (is (not (fox/suited-connector? ["KH" "JH"] [13 11])))
   (is (not (fox/suited-connector? ["AH" "KS"] [14 13]))))
 
+(deftest test-suited-one-gap?
+  (is (fox/suited-one-gap? ["AH" "QH"] [14 12]))
+  (is (fox/suited-one-gap? ["4H" "2H"] [4 2]))
+  (is (fox/suited-one-gap? ["AH" "3H"] [14 3]))
+  (is (not (fox/suited-connector? ["AH" "4H"] [14 4])))
+  (is (not (fox/suited-connector? ["AH" "JH"] [14 11])))
+  (is (not (fox/suited-connector? ["AH" "QS"] [14 12]))))
+
 (deftest test-deal
   (let [{:keys [position action-to-you hand]} (fox/deal)]
     (is (fox/positions position))
