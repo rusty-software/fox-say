@@ -203,7 +203,7 @@
   {:no-limit
    {:early {:called "In early position, when called or raised to you, you should raise with AA - TT, AK, AQ."
             :raised "In early position, when called or raised to you, you should raise with AA - TT, AK, AQ."}
-    :blind {:called "In the blind, when called to you, you should raise with AA - 88, or AJ or better. You should call with suited connectors or suited big cards (T or better)."
+    :blind {:called "In the blind, when called to you, you should raise with AA - 88, AK - AJ. You should call with suited connectors or suited big cards (T or better)."
             :raised "In the blind, when raised to you, you should raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
     :middle {:folded "In middle position, when folded to you, you should raise with AA - 77, AK - AJ, or suited cards QT or better. DON’T LIMP!"
              :called "In middle position, when called to you, you should raise with AA - TT, AK - AJ. You should call with 99 - 22, suited cards QT or better, or suited connectors."

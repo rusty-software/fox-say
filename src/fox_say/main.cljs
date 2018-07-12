@@ -71,6 +71,7 @@
                 :name "game-type"
                 :value :low-limit
                 :checked (= :low-limit game-type)
+                :disabled true
                 :on-change #(set-game-type! :low-limit)}]
        "Low Limit"]
       [:br]
