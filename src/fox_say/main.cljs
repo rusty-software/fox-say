@@ -102,13 +102,9 @@
                            [:span {:class "correct"} (name result)]))]
       [:div description]
       [:hr]
-      [:pre
+      [:code
        (for [[k v] stats]
-         (str k ": " v "; "))]
-      #_[:pre (with-out-str (pprint/pprint stats))]
-      #_[:pre (with-out-str (cljs.pprint/pprint @app-state))]]
-    ])
-  )
+         (str k ": " v "; "))]]]))
 
 (reagent/render-component
   [display]
