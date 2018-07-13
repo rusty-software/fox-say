@@ -24,6 +24,11 @@
   (is (not (fox/pair? ["AH" "AD" "KS" "KD" "JC"])))
   (is (not (fox/pair? ["AH" "AD" "KS" "KD" "KC"]))))
 
+(deftest test-two-pair?
+  (is (fox/two-pair? ["AH" "AD" "KS" "KD" "JC"]))
+  (is (not (fox/two-pair? ["AH" "AD" "KS" "QD" "JC"])))
+  (is (not (fox/two-pair? ["AH" "AD" "KS" "KD" "KC"]))))
+
 (deftest test-trips?
   (is (fox/trips? ["AH" "AD" "AC" "QH" "JH"]))
   (is (not (fox/trips? ["AH" "AD" "AS" "AC" "QD"])))

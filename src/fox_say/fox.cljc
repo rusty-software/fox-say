@@ -51,6 +51,11 @@
   (or (proper-size-and-rank? hand 4 2)
       (proper-size-and-rank? hand 1 2)))
 
+(defn two-pair?
+  "Two pair should have 3 distinct ranks, and 2 of two ranks."
+  [hand]
+  (proper-size-and-rank? hand 3 2))
+
 (defn trips?
   "Trips should have 3 ranks, and 3 in one rank."
   [hand]
