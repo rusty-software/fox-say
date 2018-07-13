@@ -74,12 +74,21 @@
 
 (defn flush?
   "Flush should have 5 of the same suit. Note that the suited? function isn't granular enough, as it would report
-  straight and royal flushes as normal flushes."
+  straight flush as a normal flush."
   [hand]
   (= 5 (first (vals (suit-frequencies hand)))))
 
 (defn straight? [hand]
-  false)
+  (let [ordered-hand-ranks (sort (map rank hand))
+        low-rank (apply min ordered-hand-ranks)
+        expected-straight (range low-rank (+ low-rank 5))
+        low-straight (range 1 6)
+        switch-to-low-ace (fn [ranks] (sort (replace {14 1} ranks)))]
+    (or (= ordered-hand-ranks expected-straight)
+        (= (switch-to-low-ace ordered-hand-ranks) low-straight))))
+
+(defn straight-flush? [hand]
+  (and (straight? hand) (flush? hand)))
 
 (defn suited? [hand]
   (apply = (map suit hand)))

@@ -49,8 +49,14 @@
 
 (deftest test-straight?
   (is (fox/straight? ["AD" "KS" "QC" "JH" "TD"]))
-  (is (not (fox/straight? ["AD" "KS" "QC" "JH" "9D"])))
-  (is (not (fox/straight? ["AD" "KD" "QD" "JD" "TD"]))))
+  (is (fox/straight? ["KD" "QD" "JD" "TD" "9D"]) "Straight flush is also a straight")
+  (is (fox/straight? ["AD" "KD" "QD" "JD" "TD"]) "Royal flush is also a straight")
+  (is (not (fox/straight? ["AD" "KS" "QC" "JH" "9D"]))))
+
+(deftest test-straight-flush?
+  (is (fox/straight-flush? ["KD" "QD" "JD" "TD" "9D"]))
+  (is (fox/straight-flush? ["AD" "KD" "QD" "JD" "TD"]) "Royal flush is also a straight flush")
+  (is (not (fox/straight-flush? ["AD" "KS" "QC" "JH" "TD"]))))
 
 (deftest test-suited-connector?
   (is (fox/suited-connector? ["AH" "KH"] [14 13]))
