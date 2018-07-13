@@ -31,6 +31,12 @@
   (is (not (fox/trips? ["AH" "AD" "QC" "QH" "JH"])))
   (is (not (fox/trips? ["AH" "AD" "QC" "QH" "QD"]))))
 
+(deftest test-quads?
+  (is (fox/quads? ["AH" "AD" "AC" "AS"]))
+  (is (fox/quads? ["AH" "AD" "AC" "AS" "JH"]))
+  (is (not (fox/quads? ["AH" "AD" "AS" "KC"])))
+  (is (not (fox/quads? ["AH" "AD" "AC" "QH" "JH"]))))
+
 (deftest test-suited-connector?
   (is (fox/suited-connector? ["AH" "KH"] [14 13]))
   (is (fox/suited-connector? ["KH" "QH"] [13 12]))

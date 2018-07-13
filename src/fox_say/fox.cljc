@@ -46,6 +46,12 @@
     (and (zero? (count pairs))
          (= 1 (count trips)))))
 
+(defn quads? [hand]
+  (let [rank-frequencies (rank-frequencies hand)
+        counts-of-ranks (vals rank-frequencies)
+        quads (filter #{4} counts-of-ranks)]
+    (= 1 (count quads))))
+
 (defn suited? [hand]
   (apply = (map suit hand)))
 
