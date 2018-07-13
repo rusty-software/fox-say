@@ -66,8 +66,20 @@
   [hand]
   (proper-size-and-rank? hand 2 4))
 
-(defn flush? [hand]
+(defn full-house?
+  "Full house should have 2 ranks, with 3 in one and 2 in the other."
+  [hand]
+  (and (proper-size-and-rank? hand 2 3)
+       (proper-size-and-rank? hand 2 2)))
+
+(defn flush?
+  "Flush should have 5 of the same suit. Note that the suited? function isn't granular enough, as it would report
+  straight and royal flushes as normal flushes."
+  [hand]
   (= 5 (first (vals (suit-frequencies hand)))))
+
+(defn straight? [hand]
+  false)
 
 (defn suited? [hand]
   (apply = (map suit hand)))

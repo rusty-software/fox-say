@@ -43,6 +43,15 @@
   (is (fox/flush? ["AH" "QH" "TH" "8H" "JH"]))
   (is (not (fox/flush? ["AH" "KH" "TH" "QH" "JC"]))))
 
+(deftest test-full-house?
+  (is (fox/full-house? ["AH" "AD" "AC" "QH" "QD"]))
+  (is (not (fox/full-house? ["AH" "AD" "AC" "AS" "JH"]))))
+
+(deftest test-straight?
+  (is (fox/straight? ["AD" "KS" "QC" "JH" "TD"]))
+  (is (not (fox/straight? ["AD" "KS" "QC" "JH" "9D"])))
+  (is (not (fox/straight? ["AD" "KD" "QD" "JD" "TD"]))))
+
 (deftest test-suited-connector?
   (is (fox/suited-connector? ["AH" "KH"] [14 13]))
   (is (fox/suited-connector? ["KH" "QH"] [13 12]))
