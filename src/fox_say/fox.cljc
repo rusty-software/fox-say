@@ -8,6 +8,7 @@
 (def actions-to-you #{:folded :called :raised})
 (def ranks ["A" "K" "Q" "J" "T" "9" "8" "7" "6" "5" "4" "3" "2"])
 (def suits ["S" "H" "C" "D"])
+(def player-count-na 100)
 
 (def fresh-deck
   (for [rank ranks
@@ -26,7 +27,27 @@
 (defn suit [[_ s]]
   (str s))
 
-(def player-count-na 100)
+(defn rank-frequencies [hand]
+  (frequencies (map rank hand)))
+
+(defn pair? [hand]
+  (let [rank-frequencies (rank-frequencies hand)
+        counts-of-ranks (vals rank-frequencies)
+        trips (filter #{3} counts-of-ranks)
+        pairs (filter #{2} counts-of-ranks)]
+    (and (zero? (count trips))
+         (= 1 (count pairs)))))
+
+(defn trips? [hand]
+  (let [rank-frequencies (rank-frequencies hand)
+        counts-of-ranks (vals rank-frequencies)
+        trips (filter #{3} counts-of-ranks)
+        pairs (filter #{2} counts-of-ranks)]
+    (and (zero? (count pairs))
+         (= 1 (count trips)))))
+
+(defn suited? [hand]
+  (apply = (map suit hand)))
 
 (defn pairs-for-ranks [upper lower]
   (let [v (subvec ranks (.indexOf ranks upper) (inc (.indexOf ranks lower)))]
@@ -235,11 +256,6 @@
                      :call {player-count-na "You should NOT call in the blind when raised to you. If you can't raise, you should fold."}}}
     }})
 
-(defn pair? [hand]
-  (apply = (map rank hand)))
-
-(defn suited? [hand]
-  (apply = (map suit hand)))
 
 (defn not-nil-by-key [key coll]
   (filter #(not (nil? %)) (map key coll)))

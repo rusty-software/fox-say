@@ -17,6 +17,20 @@
   (is (= [{:unsuited-connector [10 9]}] (fox/styled-connectors-from-rank :unsuited "T" "T")))
   (is (= [{:suited-connector [3 2]}] (fox/styled-connectors-from-rank :suited "3" "2"))))
 
+(deftest test-pair?
+  (is (fox/pair? ["AH" "AD"]))
+  (is (fox/pair? ["AH" "AD" "KS" "QD" "JC"]))
+  (is (not (fox/pair? ["AH" "KH"])))
+  (is (not (fox/pair? ["AH" "AD" "KS" "KD" "JC"])))
+  (is (not (fox/pair? ["AH" "AD" "KS" "KD" "KC"]))))
+
+(deftest test-trips?
+  (is (fox/trips? ["AH" "AD" "AC"]))
+  (is (fox/trips? ["AH" "AD" "AC" "QH" "JH"]))
+  (is (not (fox/trips? ["AH" "AD" "KC"])))
+  (is (not (fox/trips? ["AH" "AD" "QC" "QH" "JH"])))
+  (is (not (fox/trips? ["AH" "AD" "QC" "QH" "QD"]))))
+
 (deftest test-suited-connector?
   (is (fox/suited-connector? ["AH" "KH"] [14 13]))
   (is (fox/suited-connector? ["KH" "QH"] [13 12]))
