@@ -76,7 +76,7 @@
   (is (not (fox/suited-connector? ["AH" "QS"] [14 12]))))
 
 (deftest test-deal
-  (let [{:keys [position action-to-you hand]} (fox/deal)]
+  (let [{:keys [position action-to-you hand]} (fox/deal-hole)]
     (is (fox/positions position))
     (is (fox/actions-to-you action-to-you))
     (is (= 2 (count hand)))))

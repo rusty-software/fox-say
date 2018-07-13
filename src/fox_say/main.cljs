@@ -1,7 +1,6 @@
 (ns fox-say.main
     (:require [reagent.core :as reagent]
-              [fox-say.fox :as fox]
-              [cljs.pprint :as pprint]))
+              [fox-say.fox :as fox]))
 
 (enable-console-print!)
 
@@ -13,8 +12,8 @@
 (defn set-game-type! [game-type]
   (swap! app-state assoc :game-type game-type))
 
-(defn deal! []
-  (let [{:keys [position action-to-you action-count hand]} (fox/deal)]
+(defn deal-hole! []
+  (let [{:keys [position action-to-you action-count hand]} (fox/deal-hole)]
     (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand
            :chosen-action nil :correct-action nil :result nil :description nil)))
 
@@ -54,7 +53,7 @@
                     (.preventDefault e))
        :on-key-press (fn [e]
                        (case (.-key e)
-                         "d" (deal!)
+                         "d" (deal-hole!)
                          "r" (raise!)
                          "c" (call!)
                          "f" (fold!)
@@ -77,7 +76,7 @@
       [:br]
       [:button {:class "myButton"
                 :auto-focus true
-                :on-click #(deal!)} "Deal"]
+                :on-click #(deal-hole!)} "Deal"]
       [:div "Position: "
        [:strong (when position (name position))]]
       [:div "Action to you: "

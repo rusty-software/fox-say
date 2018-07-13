@@ -379,12 +379,12 @@
     {:correct-action correct-action
      :description description}))
 
-(defn deal []
+(defn deal-hole []
   (let [position (rand-nth (seq positions))
         action-to-you (rand-nth (seq actions-to-you))]
     (if (and (= :folded action-to-you)
              (#{:early :blind} position))
-      (deal)
+      (deal-hole)
       {:position position
        :action-to-you action-to-you
        :action-count (rand-nth (range 3 6))
