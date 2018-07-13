@@ -25,17 +25,18 @@
   (is (not (fox/pair? ["AH" "AD" "KS" "KD" "KC"]))))
 
 (deftest test-trips?
-  (is (fox/trips? ["AH" "AD" "AC"]))
   (is (fox/trips? ["AH" "AD" "AC" "QH" "JH"]))
-  (is (not (fox/trips? ["AH" "AD" "KC"])))
-  (is (not (fox/trips? ["AH" "AD" "QC" "QH" "JH"])))
-  (is (not (fox/trips? ["AH" "AD" "QC" "QH" "QD"]))))
+  (is (not (fox/trips? ["AH" "AD" "AS" "AC" "QD"])))
+  (is (not (fox/trips? ["AH" "AD" "QC" "QH" "QD"])))
+  (is (not (fox/trips? ["AH" "AD" "QC" "QH" "JH"]))))
 
 (deftest test-quads?
-  (is (fox/quads? ["AH" "AD" "AC" "AS"]))
   (is (fox/quads? ["AH" "AD" "AC" "AS" "JH"]))
-  (is (not (fox/quads? ["AH" "AD" "AS" "KC"])))
   (is (not (fox/quads? ["AH" "AD" "AC" "QH" "JH"]))))
+
+(deftest test-flush?
+  (is (fox/flush? ["AH" "QH" "TH" "8H" "JH"]))
+  (is (not (fox/flush? ["AH" "KH" "TH" "QH" "JC"]))))
 
 (deftest test-suited-connector?
   (is (fox/suited-connector? ["AH" "KH"] [14 13]))

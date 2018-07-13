@@ -27,30 +27,42 @@
 (defn suit [[_ s]]
   (str s))
 
+(defn frequencies-of [f hand]
+  (frequencies (map f hand)))
+
 (defn rank-frequencies [hand]
-  (frequencies (map rank hand)))
+  (frequencies-of rank hand))
 
-(defn pair? [hand]
-  (let [rank-frequencies (rank-frequencies hand)
-        counts-of-ranks (vals rank-frequencies)
-        trips (filter #{3} counts-of-ranks)
-        pairs (filter #{2} counts-of-ranks)]
-    (and (zero? (count trips))
-         (= 1 (count pairs)))))
+(defn suit-frequencies [hand]
+  (frequencies-of suit hand))
 
-(defn trips? [hand]
-  (let [rank-frequencies (rank-frequencies hand)
-        counts-of-ranks (vals rank-frequencies)
-        trips (filter #{3} counts-of-ranks)
-        pairs (filter #{2} counts-of-ranks)]
-    (and (zero? (count pairs))
-         (= 1 (count trips)))))
+(defn proper-size-and-rank?
+  "Given a hand, returns whether or not the number of distinct ranks is the right and the number of items in a rank is
+  correct."
+  [hand size rank-count]
+  (let [rank-counts (vals (rank-frequencies hand))]
+    (and (= size (count rank-counts))
+         (not (nil? (some #{rank-count} rank-counts))))))
 
-(defn quads? [hand]
-  (let [rank-frequencies (rank-frequencies hand)
-        counts-of-ranks (vals rank-frequencies)
-        quads (filter #{4} counts-of-ranks)]
-    (= 1 (count quads))))
+(defn pair?
+  "For a full hand, a pair should have 4 distinct ranks, and 2 of one rank.
+  For hole cards, a pair should have 1 rank and two cards in that rank."
+  [hand]
+  (or (proper-size-and-rank? hand 4 2)
+      (proper-size-and-rank? hand 1 2)))
+
+(defn trips?
+  "Trips should have 3 ranks, and 3 in one rank."
+  [hand]
+  (proper-size-and-rank? hand 3 3))
+
+(defn quads?
+  "Quads should have 2 ranks, and 4 in one rank."
+  [hand]
+  (proper-size-and-rank? hand 2 4))
+
+(defn flush? [hand]
+  (= 5 (first (vals (suit-frequencies hand)))))
 
 (defn suited? [hand]
   (apply = (map suit hand)))
