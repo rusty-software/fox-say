@@ -356,7 +356,7 @@
                                          :hand ["AS" "AH"]}))))
   (testing "blinds"
     (is (= {:correct-action :raise
-            :description "In the blind, when called to you, you should raise with AA - 88, or AJ or better. You should call with suited connectors or suited big cards (T or better)."}
+            :description "In the blind, when called to you, you should raise with AA - 88, AK - AJ. You should call with suited connectors or suited big cards (T or better)."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :blind
                                          :action-to-you :called

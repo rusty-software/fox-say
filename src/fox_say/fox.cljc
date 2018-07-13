@@ -46,7 +46,7 @@
     (for [r (reverse (range lower-rank (inc upper-rank)))]
       {connector [r (dec r)]})))
 
-(def no-limit-proper-actions
+(def no-limit-pre-flop-proper-actions
   {:early {:called {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
                                                      (styled-cards-from-rank :suited "A" "Q")
                                                      (styled-cards-from-rank :unsuited "A" "Q"))}}
@@ -108,7 +108,7 @@
                     :call {player-count-na (concat (pairs-for-ranks "9" "7")
                                                    [{:suited-connector :any}])}}}})
 
-(def low-limit-proper-actions
+(def low-limit-pre-flop-proper-actions
   {:early {:called {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
                                                     (styled-cards-from-rank :suited "A" "J")
                                                     (styled-cards-from-rank :unsuited "A" "Q")
@@ -195,11 +195,11 @@
                                                     [{:suited [13 11]} {:suited [12 11]} {:unsuited [13 12]}])}
                     :call {player-count-na [:any]}}}})
 
-(def proper-action
-  {:no-limit no-limit-proper-actions
-   :low-limit low-limit-proper-actions})
+(def pre-flop-proper-action
+  {:no-limit no-limit-pre-flop-proper-actions
+   :low-limit low-limit-pre-flop-proper-actions})
 
-(def proper-action-description
+(def pre-flop-proper-action-description
   {:no-limit
    {:early {:called "In early position, when called or raised to you, you should raise with AA - TT, AK, AQ."
             :raised "In early position, when called or raised to you, you should raise with AA - TT, AK, AQ."}
@@ -294,7 +294,7 @@
       (suited-one-gap-match hand ranks suited-one-gaps))))
 
 (defn action-with [game-type position action-to-you action-count action]
-  (let [action-hands (get-in proper-action [game-type position action-to-you action])
+  (let [action-hands (get-in pre-flop-proper-action [game-type position action-to-you action])
         action-count (first (filter #(<= action-count %) (keys action-hands)))]
     (get action-hands action-count)))
 
@@ -315,7 +315,7 @@
                                 :as hand-state}]
 
   (let [correct-action (action hand-state)
-        description (get-in proper-action-description [game-type position action-to-you])]
+        description (get-in pre-flop-proper-action-description [game-type position action-to-you])]
     {:correct-action correct-action
      :description description}))
 
