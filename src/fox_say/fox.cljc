@@ -381,14 +381,18 @@
 
 (defn deal-hole []
   (let [position (rand-nth (seq positions))
-        action-to-you (rand-nth (seq actions-to-you))]
+        action-to-you (rand-nth (seq actions-to-you))
+        deck (shuffle fresh-deck)
+        hand (take 2 deck)
+        deck (drop 2 deck)]
     (if (and (= :folded action-to-you)
              (#{:early :blind} position))
       (deal-hole)
       {:position position
        :action-to-you action-to-you
        :action-count (rand-nth (range 3 6))
-       :hand (take 2 (shuffle fresh-deck))})))
+       :hand hand
+       :deck deck})))
 
 (comment
   (let [deck (shuffle fresh-deck)]

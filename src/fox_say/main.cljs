@@ -5,7 +5,7 @@
 (enable-console-print!)
 
 ;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (reagent/atom {:game-type :no-limit :position nil :action-to-you nil :action-count nil :hand nil
+(defonce app-state (reagent/atom {:game-type :no-limit :position nil :action-to-you nil :action-count nil :hand nil :deck nil
                                   :chosen-action nil :correct-action nil :result nil :description nil
                                   :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :fold 0 :call 0 :raise 0}}))
 
@@ -13,19 +13,20 @@
   (swap! app-state assoc :game-type game-type))
 
 (defn deal-hole! []
-  (let [{:keys [position action-to-you action-count hand]} (fox/deal-hole)]
-    (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand
-           :chosen-action nil :correct-action nil :result nil :description nil)))
+  (let [{:keys [position action-to-you action-count hand deck]} (fox/deal-hole)]
+    (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand :deck deck
+           :chosen-action nil :correct-action nil :result nil :description nil
+           :showing-pre-flop? true)))
 
 (defn toggle [app-state key]
   (assoc app-state key (not (get app-state key))))
 
 (defn show-pre-flop-results! []
-  (let [toggled (toggle @app-state :showing-pre-flop-results)]
+  (let [toggled (toggle @app-state :showing-pre-flop-results?)]
     (reset! app-state toggled)))
 
 (defn show-stats! []
-  (let [toggled (toggle @app-state :showing-stats)]
+  (let [toggled (toggle @app-state :showing-stats?)]
     (reset! app-state toggled)))
 
 (defn update-stats [{:keys [stats]} action correct-action]
@@ -73,12 +74,9 @@
     (for [[k v] stats]
       (str k ": " v "; "))]])
 
-(defn pre-flop-display []
-  (let [{:keys [game-type position action-to-you action-count hand
-                chosen-action correct-action result description stats
-                showing-pre-flop-results showing-stats]} @app-state]
+(defn deal-display []
+  (let [game-type (:game-type @app-state)]
     [:div
-     [:h2 "Pre Flop Trainer"]
      [:form
       {:on-submit (fn [e]
                     (.preventDefault e))
@@ -104,42 +102,55 @@
                 :disabled true
                 :on-change #(set-game-type! :low-limit)}]
        "Low Limit"]
-      [:br]
-      [:button {:class "myButton"
-                :auto-focus true
-                :on-click #(deal-hole!)} "Deal"]
-      [:label
-       [:input {:type "checkbox"
-                :on-click #(show-pre-flop-results!)}]
-       "Show Pre-Flop Results"]
       [:label
        [:input {:type "checkbox"
                 :on-click #(show-stats!)}]
        "Show Stats"]
-
-      [:div "Position: "
-       [:strong (when position (name position))]]
-      [:div "Action to you: "
-       [:strong (when action-to-you (name action-to-you))]]
-      [:div (str "Action count: " action-count)]
-      [:div "Hand: "
-       [:div {:class (str "card card" (first hand))}]
-       [:div {:class (str "card card" (second hand))}]
-       (when result
-         (if (= :correct result)
-           [:div {:class "check-mark"}]
-           [:div {:class "x-mark"}]))]
+      [:br]
+      [:button {:class "myButton"
+                :auto-focus true
+                :on-click #(deal-hole!)} "Deal"]
       [:button {:class "myButton" :on-click #(raise!)} "Raise"]
       [:button {:class "myButton" :on-click #(call!)} "Call"]
-      [:button {:class "myButton" :on-click #(fold!)} "Fold"]
-      (when showing-pre-flop-results
-        (pre-flop-results-display chosen-action correct-action result description))
-      (when showing-stats
-        (stats-display stats))]]))
+      [:button {:class "myButton" :on-click #(fold!)} "Fold"]]]))
+
+(defn pre-flop-display []
+  (let [{:keys [position action-to-you action-count hand
+                chosen-action correct-action result description
+                showing-pre-flop-results?]} @app-state]
+    [:div
+     [:h3 "Pre Flop Trainer"]
+     [:label
+      [:input {:type "checkbox"
+               :on-click #(show-pre-flop-results!)}]
+      "Show Pre-Flop Results"]
+     [:div "Position: "
+      [:strong (when position (name position))]]
+     [:div "Action to you: "
+      [:strong (when action-to-you (name action-to-you))]]
+     [:div (str "Action count: " action-count)]
+     [:div "Hand: "
+      [:div {:class (str "card card" (first hand))}]
+      [:div {:class (str "card card" (second hand))}]
+      (when result
+        (if (= :correct result)
+          [:div {:class "check-mark"}]
+          [:div {:class "x-mark"}]))]
+     (when showing-pre-flop-results?
+       (pre-flop-results-display chosen-action correct-action result description))]))
+
+(defn flop-display []
+  [:div "i'm the flop display"])
 
 (defn display []
-  [:div
-   (pre-flop-display)])
+  (let [{:keys [showing-pre-flop? showing-stats? stats]} @app-state]
+    [:div
+     (deal-display)
+     (if showing-pre-flop?
+       (pre-flop-display)
+       (flop-display))
+     (when showing-stats?
+       (stats-display stats))]))
 
 (reagent/render-component
   [display]
