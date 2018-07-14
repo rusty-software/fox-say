@@ -373,7 +373,6 @@
 (defn action-with-description [{:keys [game-type position action-to-you action-count]
                                 :or {game-type :no-limit action-count player-count-na}
                                 :as hand-state}]
-
   (let [correct-action (action hand-state)
         description (get-in pre-flop-proper-action-description [game-type position action-to-you])]
     {:correct-action correct-action
@@ -393,6 +392,9 @@
        :action-count (rand-nth (range 3 6))
        :hand hand
        :deck deck})))
+
+(defn deal-flop [{:keys [deck]}]
+  (take 3 deck))
 
 (comment
   (let [deck (shuffle fresh-deck)]

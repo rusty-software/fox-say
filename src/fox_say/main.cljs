@@ -16,7 +16,7 @@
   (let [{:keys [position action-to-you action-count hand deck]} (fox/deal-hole)]
     (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand :deck deck
            :chosen-action nil :correct-action nil :result nil :description nil
-           :showing-pre-flop? true)))
+           :showing-flop? false)))
 
 (defn toggle [app-state key]
   (assoc app-state key (not (get app-state key))))
@@ -41,10 +41,14 @@
         (update :incorrect-count inc))))
 
 (defn check-proper-action [state action]
-  (let [{:keys [correct-action description] :as r} (fox/action-with-description @app-state)
+  (let [{:keys [correct-action description]} (fox/action-with-description @app-state)
+        flop (fox/deal-flop @app-state)
         result (if (= action correct-action) :correct :incorrect)
+        flopping? (and (= :correct result) (not (= :fold correct-action)))
         updated-stats (update-stats state action correct-action)]
-    (assoc state :chosen-action action :correct-action correct-action :result result :description description :stats updated-stats)))
+    (assoc state :chosen-action action :correct-action correct-action :result result
+                 :description description :stats updated-stats
+                 :flop flop :showing-flop? flopping?)))
 
 (defn raise! []
   (swap! app-state check-proper-action :raise))
@@ -65,7 +69,8 @@
                       (if (not= :correct result)
                         [:span {:class "incorrect"} (name result)]
                         [:span {:class "correct"} (name result)]))]
-   [:div description]])
+   [:div description]
+   [:hr]])
 
 (defn stats-display [stats]
   [:div
@@ -129,7 +134,9 @@
      [:div "Action to you: "
       [:strong (when action-to-you (name action-to-you))]]
      [:div (str "Action count: " action-count)]
-     [:div "Hand: "
+     [:div
+      {:style {:display "flex" :align-items "center"}}
+      "Hand: "
       [:div {:class (str "card card" (first hand))}]
       [:div {:class (str "card card" (second hand))}]
       (when result
@@ -140,14 +147,23 @@
        (pre-flop-results-display chosen-action correct-action result description))]))
 
 (defn flop-display []
-  [:div "i'm the flop display"])
+  (let [{:keys [flop]} @app-state
+        [f1 f2 f3] flop]
+    [:div
+     [:div
+      {:style {:display "flex" :align-items "center"}}
+      "Flop: "
+      [:div {:class (str "card card" f1)}]
+      [:div {:class (str "card card" f2)}]
+      [:div {:class (str "card card" f3)}]
+      ]]))
 
 (defn display []
-  (let [{:keys [showing-pre-flop? showing-stats? stats]} @app-state]
+  (let [{:keys [showing-flop? showing-stats? stats]} @app-state]
     [:div
      (deal-display)
-     (if showing-pre-flop?
-       (pre-flop-display)
+     (pre-flop-display)
+     (when showing-flop?
        (flop-display))
      (when showing-stats?
        (stats-display stats))]))
