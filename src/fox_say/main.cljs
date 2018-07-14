@@ -17,6 +17,17 @@
     (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand
            :chosen-action nil :correct-action nil :result nil :description nil)))
 
+(defn toggle [app-state key]
+  (assoc app-state key (not (get app-state key))))
+
+(defn show-pre-flop-results! []
+  (let [toggled (toggle @app-state :showing-pre-flop-results)]
+    (reset! app-state toggled)))
+
+(defn show-stats! []
+  (let [toggled (toggle @app-state :showing-stats)]
+    (reset! app-state toggled)))
+
 (defn update-stats [{:keys [stats]} action correct-action]
   (if (= action correct-action)
     (-> stats
@@ -43,9 +54,29 @@
 (defn fold! []
   (swap! app-state check-proper-action :fold))
 
-(defn display []
+(defn pre-flop-results-display [chosen-action correct-action result description]
+  [:div
+   [:hr]
+   [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
+   [:div (str "Proper action: " (when correct-action (name correct-action)))]
+
+   [:div "Result: " (when result
+                      (if (not= :correct result)
+                        [:span {:class "incorrect"} (name result)]
+                        [:span {:class "correct"} (name result)]))]
+   [:div description]])
+
+(defn stats-display [stats]
+  [:div
+   [:hr]
+   [:code
+    (for [[k v] stats]
+      (str k ": " v "; "))]])
+
+(defn pre-flop-display []
   (let [{:keys [game-type position action-to-you action-count hand
-                chosen-action correct-action result description stats]} @app-state]
+                chosen-action correct-action result description stats
+                showing-pre-flop-results showing-stats]} @app-state]
     [:div
      [:h2 "Pre Flop Trainer"]
      [:form
@@ -77,6 +108,15 @@
       [:button {:class "myButton"
                 :auto-focus true
                 :on-click #(deal-hole!)} "Deal"]
+      [:label
+       [:input {:type "checkbox"
+                :on-click #(show-pre-flop-results!)}]
+       "Show Pre-Flop Results"]
+      [:label
+       [:input {:type "checkbox"
+                :on-click #(show-stats!)}]
+       "Show Stats"]
+
       [:div "Position: "
        [:strong (when position (name position))]]
       [:div "Action to you: "
@@ -92,19 +132,14 @@
       [:button {:class "myButton" :on-click #(raise!)} "Raise"]
       [:button {:class "myButton" :on-click #(call!)} "Call"]
       [:button {:class "myButton" :on-click #(fold!)} "Fold"]
-      [:hr]
-      [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
-      [:div (str "Proper action: " (when correct-action (name correct-action)))]
+      (when showing-pre-flop-results
+        (pre-flop-results-display chosen-action correct-action result description))
+      (when showing-stats
+        (stats-display stats))]]))
 
-      [:div "Result: " (when result
-                         (if (not= :correct result)
-                           [:span {:class "incorrect"} (name result)]
-                           [:span {:class "correct"} (name result)]))]
-      [:div description]
-      [:hr]
-      [:code
-       (for [[k v] stats]
-         (str k ": " v "; "))]]]))
+(defn display []
+  [:div
+   (pre-flop-display)])
 
 (reagent/render-component
   [display]
