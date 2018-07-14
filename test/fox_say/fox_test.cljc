@@ -454,3 +454,45 @@
                                          :action-to-you :raised
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))))
+
+
+
+(deftest test-top-two-pair?
+  (is (fox/top-two-pair? ["3H" "AH" "AS" "7C" "7D"]))
+  (is (not (fox/top-two-pair? ["AH" "AS" "7C" "3D" "3H"])))
+  (is (not (fox/top-two-pair? ["KS" "JS" "9S" "7S" "5D"])))
+  )
+
+(deftest test-very-strong-made-hand?
+  (let [very-strong-hands [["AH" "AS" "AC" "AD" "3H"]       ;; quads
+                           ["AH" "AS" "AC" "5D" "5H"]       ;; full house
+                           ["KS" "JS" "9S" "7S" "5S"]       ;; flush
+                           ["KS" "QC" "JD" "TH" "9S"]       ;; straight
+                           ["AH" "AS" "AC" "5D" "3H"]       ;; trips
+                           ["AH" "AS" "7C" "7D" "3H"]       ;; top two pair
+                           ]]
+    (doseq [hand very-strong-hands]
+      (is (fox/very-strong-made-hand? hand)))))
+
+(deftest test-made-hand?
+  (is (fox/made-hand? ["AH" "AS" "7C" "5D" "3H"]) "pair should be made")
+  (is (fox/made-hand? ["AH" "AS" "7C" "7D" "3H"]) "two pair should be made")
+  (is (fox/made-hand? ["AH" "AS" "AC" "5D" "3H"]) "trips should be made")
+  (is (fox/made-hand? ["AH" "AS" "AC" "AD" "3H"]) "quads should be made")
+  (is (fox/made-hand? ["KS" "QC" "JD" "TH" "9S"]) "straight should be made")
+  (is (fox/made-hand? ["KS" "JS" "9S" "7S" "5S"]) "flush should be made")
+  (is (fox/made-hand? ["AH" "AS" "AC" "5D" "5H"]) "full house should be made")
+  (is (not (fox/made-hand? ["KS" "JS" "9S" "7S" "5D"])) "trash should not be made")
+  (is (not (fox/made-hand? ["KS" "QC" "JD" "TH" "8S"])) "draw should not be made"))
+
+#_(deftest test-hand-category
+  (let [very-strong-hands [["AH" "AS" "AC" "AD" "3H"]       ;; quads
+                           ["AH" "AS" "AC" "5D" "5H"]       ;; full house
+                           ["KS" "JS" "9S" "7S" "5S"]       ;; flush
+                           ["KS" "QC" "JD" "TH" "9S"]       ;; straight
+                           ["AH" "AS" "AC" "5D" "3H"]       ;; trips
+                           ["AH" "AS" "7C" "7D" "3H"]       ;; top two pair
+                           ]]
+    (doseq [hand very-strong-hands]
+      (is (= :very-strong (fox/hand-strength hand)))))
+  )

@@ -353,6 +353,30 @@
       (suited-connector-match hand ranks suited-connectors)
       (suited-one-gap-match hand ranks suited-one-gaps))))
 
+(defn top-two-pair? [hand]
+  (let [rank-frequencies (rank-frequencies hand)
+        top-two (take 2 (into (sorted-map-by >) rank-frequencies))]
+    (= 2 (val (first top-two)) (val (second top-two)))))
+
+(defn very-strong-made-hand? [hand]
+  (or
+    (top-two-pair? hand)
+    (trips? hand)
+    (straight? hand)
+    (flush? hand)
+    (full-house? hand)
+    (quads? hand)))
+
+(defn made-hand? [hand]
+  (or
+    (very-strong-made-hand? hand)
+    (pair? hand)
+    (two-pair? hand)))
+
+#_(defn hand-strength [hand]
+  (cond
+    (or )))
+
 (defmulti action-with (fn [street game-type position action-to-you action-count action] street))
 
 (defmethod action-with :pre-flop [_ game-type position action-to-you action-count action]
@@ -361,12 +385,14 @@
     (get action-hands action-count)))
 
 (defmethod action-with :flop [_ game-type position action-to-you action-count action]
+
   (println "IMPLEMENT ME! action-with :flop " action)
   (let [action-hands (get-in pre-flop-proper-action [game-type position action-to-you action])
         action-count (first (filter #(<= action-count %) (keys action-hands)))]
     (get action-hands action-count)))
 
-(defn action [{:keys [game-type position street action-to-you action-count hand] :or {game-type :no-limit street :pre-flop action-count player-count-na}}]
+(defn action [{:keys [game-type position street action-to-you action-count hand]
+               :or {game-type :no-limit street :pre-flop action-count player-count-na}}]
   (let [raise-with (action-with street game-type position action-to-you action-count :raise)
         call-with (action-with street game-type position action-to-you action-count :call)]
     (cond
