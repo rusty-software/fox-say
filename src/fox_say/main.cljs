@@ -21,8 +21,8 @@
 (defn toggle [app-state key]
   (assoc app-state key (not (get app-state key))))
 
-(defn show-pre-flop-results! []
-  (let [toggled (toggle @app-state :showing-pre-flop-results?)]
+(defn show-action-results! []
+  (let [toggled (toggle @app-state :showing-action-results?)]
     (reset! app-state toggled)))
 
 (defn show-stats! []
@@ -45,7 +45,10 @@
         flop (fox/deal-flop state)
         result (if (= action correct-action) :correct :incorrect)
         flopping? (and (= :correct result) (not (= :fold correct-action)))
-        street (if flopping? :flop :pre-flop)
+        street (if (or flopping?
+                       (= :flop (:street state)))
+                 :flop
+                 :pre-flop)
         updated-stats (update-stats state action correct-action)]
     (assoc state :chosen-action action :correct-action correct-action :result result
                  :description description :stats updated-stats
@@ -60,7 +63,7 @@
 (defn fold! []
   (swap! app-state check-proper-action :fold))
 
-(defn pre-flop-results-display [chosen-action correct-action result description]
+(defn action-results-display [chosen-action correct-action result description]
   [:div
    [:hr]
    [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
@@ -81,7 +84,7 @@
       (str k ": " v "; "))]])
 
 (defn deal-display []
-  (let [{:keys [game-type showing-flop?]} @app-state]
+  (let [{:keys [game-type]} @app-state]
     [:div
      [:form
       {:on-submit (fn [e]
@@ -110,6 +113,10 @@
        "Low Limit"]
       [:label
        [:input {:type "checkbox"
+                :on-click #(show-action-results!)}]
+       "Show Action Results"]
+      [:label
+       [:input {:type "checkbox"
                 :on-click #(show-stats!)}]
        "Show Stats"]
       [:br]
@@ -118,17 +125,11 @@
                 :on-click #(deal-hole!)} "Deal"]
       [:button {:class "myButton" :on-click #(raise!)} "Raise"]
       [:button {:class "myButton" :on-click #(call!)} "Call"]
-      [:button {:class "myButton" :on-click #(fold!)} (if showing-flop? "Check" "Fold")]]]))
+      [:button {:class "myButton" :on-click #(fold!)} "Fold"]]]))
 
 (defn pre-flop-display []
-  (let [{:keys [position action-to-you action-count hand
-                chosen-action correct-action result description
-                showing-pre-flop-results?]} @app-state]
+  (let [{:keys [position action-to-you action-count hand result]} @app-state]
     [:div
-     [:label
-      [:input {:type "checkbox"
-               :on-click #(show-pre-flop-results!)}]
-      "Show Pre-Flop Results"]
      [:div "Position: "
       [:strong (when position (name position))]]
      [:div "Action to you: "
@@ -142,9 +143,7 @@
       (when result
         (if (= :correct result)
           [:div {:class "check-mark"}]
-          [:div {:class "x-mark"}]))]
-     (when showing-pre-flop-results?
-       (pre-flop-results-display chosen-action correct-action result description))]))
+          [:div {:class "x-mark"}]))]]))
 
 (defn flop-display []
   (let [{:keys [flop]} @app-state
@@ -159,12 +158,15 @@
       ]]))
 
 (defn display []
-  (let [{:keys [showing-flop? showing-stats? stats]} @app-state]
+  (let [{:keys [showing-flop? showing-action-results? showing-stats?
+                chosen-action correct-action result description stats]} @app-state]
     [:div
      (deal-display)
      (pre-flop-display)
      (when showing-flop?
        (flop-display))
+     (when showing-action-results?
+       (action-results-display chosen-action correct-action result description))
      (when showing-stats?
        (stats-display stats))]))
 

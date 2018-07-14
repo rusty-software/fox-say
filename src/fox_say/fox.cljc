@@ -401,16 +401,7 @@
       (pair? (concat hole flop)) :mediocre
       :else :trash)))
 
-(defmulti action-with (fn [street game-type position action-to-you action-count action] street))
-
-(defmethod action-with :pre-flop [_ game-type position action-to-you action-count action]
-  (let [action-hands (get-in pre-flop-proper-action [game-type position action-to-you action])
-        action-count (first (filter #(<= action-count %) (keys action-hands)))]
-    (get action-hands action-count)))
-
-(defmethod action-with :flop [_ game-type position action-to-you action-count action]
-
-  (println "IMPLEMENT ME! action-with :flop " action)
+(defn action-with [_ game-type position action-to-you action-count action]
   (let [action-hands (get-in pre-flop-proper-action [game-type position action-to-you action])
         action-count (first (filter #(<= action-count %) (keys action-hands)))]
     (get action-hands action-count)))
@@ -428,13 +419,24 @@
 
       :else :fold)))
 
-(defn action-with-description [{:keys [game-type position action-to-you action-count]
-                                :or {game-type :no-limit action-count player-count-na}
-                                :as hand-state}]
+(defmulti action-with-description (fn [state] (:street state)))
+
+(defmethod action-with-description :pre-flop [{:keys [game-type position action-to-you action-count]
+                                               :or {game-type :no-limit action-count player-count-na}
+                                               :as hand-state}]
   (let [correct-action (action hand-state)
         description (get-in pre-flop-proper-action-description [game-type position action-to-you])]
     {:correct-action correct-action
      :description description}))
+
+(defmethod action-with-description :flop [{:keys [hand flop] :as state}]
+  (println "action-with-description for flop")
+  (let [category (hand-category hand flop)]
+    {:correct-action category
+     :description "Very strong hands are almost always ahead, so should be played very aggressively.
+     Strong hands are usually ahead, so aggressive play is appropriate.
+     For mediocre hands, it depends on what you're holding, the community cards, and the number of other players.
+     For trash, an occasional bluff is OK, but you should usually fold with any action."}))
 
 (defn deal-hole []
   (let [position (rand-nth (seq positions))

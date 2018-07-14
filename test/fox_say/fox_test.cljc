@@ -392,6 +392,7 @@
             :description "In early position, when called or raised to you, you should raise with AA - TT, AK, AQ."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :early
+                                         :street :pre-flop
                                          :action-to-you :raised
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]}))))
@@ -400,6 +401,7 @@
             :description "In the blind, when called to you, you should raise with AA - 88, AK - AJ. You should call with suited connectors or suited big cards (T or better)."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :blind
+                                         :street :pre-flop
                                          :action-to-you :called
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))
@@ -407,6 +409,7 @@
             :description "In the blind, when raised to you, you should raise with AA - QQ, AK. You should call with JJ - 77, suited connectors, or suited one gaps, provided you have a lot of chips."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :blind
+                                         :street :pre-flop
                                          :action-to-you :raised
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]}))))
@@ -415,6 +418,7 @@
             :description "In middle position, when folded to you, you should raise with AA - 77, AK - AJ, or suited cards QT or better. DON’T LIMP!"}
            (fox/action-with-description {:game-type :no-limit
                                          :position :middle
+                                         :street :pre-flop
                                          :action-to-you :folded
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))
@@ -422,6 +426,7 @@
             :description "In middle position, when called to you, you should raise with AA - TT, AK - AJ. You should call with 99 - 22, suited cards QT or better, or suited connectors."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :middle
+                                         :street :pre-flop
                                          :action-to-you :called
                                          :action-count fox/player-count-na
                                          :hand ["9S" "9H"]})))
@@ -429,6 +434,7 @@
             :description "In middle position, when raised to you, you should raise with AA - TT, AK, AQ. You should call with 99 - 22 or suited connectors."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :middle
+                                         :street :pre-flop
                                          :action-to-you :raised
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]}))))
@@ -437,6 +443,7 @@
             :description "In late position, when folded to you, you should raise with AA - 22, AX suited, A7 or better, big cards (T or better), or suited connectors."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :late
+                                         :street :pre-flop
                                          :action-to-you :folded
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))
@@ -444,6 +451,7 @@
             :description "In late position, when called to you, you should raise with AA - TT, AK - AJ. You should call with 99 - 22, AX suited, suited cards 9 or better, or suited connectors."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :late
+                                         :street :pre-flop
                                          :action-to-you :called
                                          :action-count fox/player-count-na
                                          :hand ["9S" "9H"]})))
@@ -451,11 +459,10 @@
             :description "In late position, when raised to you, you should raise with AA - TT, AK, AQ. You should call with 99 - 77 or suited connectors."}
            (fox/action-with-description {:game-type :no-limit
                                          :position :late
+                                         :street :pre-flop
                                          :action-to-you :raised
                                          :action-count fox/player-count-na
                                          :hand ["AS" "AH"]})))))
-
-
 
 (deftest test-top-two-pair?
   (is (fox/top-two-pair? ["3H" "AH" "AS" "7C" "7D"]))
