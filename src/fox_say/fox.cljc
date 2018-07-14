@@ -358,6 +358,20 @@
         top-two (take 2 (into (sorted-map-by >) rank-frequencies))]
     (= 2 (val (first top-two)) (val (second top-two)))))
 
+(defn overpair? [hole flop]
+  (let [top-hole-rank (apply max (map rank hole))
+        top-flop-rank (apply max (map rank flop))]
+    (and (pair? hole)
+         (> top-hole-rank top-flop-rank))))
+
+(defn top-pair-and-kicker? [hole flop]
+  (let [hole-ranks (map rank hole)
+        top-hole-rank (apply max hole-ranks)]
+    (and (not (pair? hole))
+         (pair? (concat hole flop))
+         (or (= 14 top-hole-rank)
+             (= [14 13] hole-ranks)))))
+
 (defn very-strong-made-hand? [hand]
   (or
     (top-two-pair? hand)
@@ -378,6 +392,7 @@
   (let [hand (concat hole flop)]
     (cond
       (very-strong-made-hand? hand) :very-strong
+      (or (overpair? hole flop) (top-pair-and-kicker? hole flop)) :strong
       :else :trash)))
 
 (defmulti action-with (fn [street game-type position action-to-you action-count action] street))

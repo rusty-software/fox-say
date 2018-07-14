@@ -460,8 +460,18 @@
 (deftest test-top-two-pair?
   (is (fox/top-two-pair? ["3H" "AH" "AS" "7C" "7D"]))
   (is (not (fox/top-two-pair? ["AH" "AS" "7C" "3D" "3H"])))
-  (is (not (fox/top-two-pair? ["KS" "JS" "9S" "7S" "5D"])))
-  )
+  (is (not (fox/top-two-pair? ["KS" "JS" "9S" "7S" "5D"]))))
+
+(deftest test-overpair?
+  (is (fox/overpair? ["8H" "8S"] ["7C" "5D" "3H"]))
+  (is (not (fox/overpair? ["6H" "6S"] ["7C" "5D" "3H"])))
+  (is (not (fox/overpair? ["AH" "KS"] ["7C" "5D" "3H"]))))
+
+(deftest test-top-pair-and-kicker?
+  (is (fox/top-pair-and-kicker? ["AH" "8S"] ["8C" "5D" "3H"]))
+  (is (fox/top-pair-and-kicker? ["AH" "KS"] ["AC" "5D" "3H"]))
+  (is (not (fox/top-pair-and-kicker? ["KH" "QS"] ["KC" "5D" "3H"])))
+  (is (not (fox/top-pair-and-kicker? ["AH" "AS"] ["8C" "5D" "3H"]))))
 
 (deftest test-very-strong-made-hand?
   (let [very-strong-hands [["AH" "AS" "AC" "AD" "3H"]       ;; quads
@@ -492,8 +502,12 @@
                            {:hole ["KS" "QC"] :flop ["JD" "TH" "9S"]} ;; straight
                            {:hole ["AH" "AS"] :flop ["AC" "5D" "3H"]} ;; trips
                            {:hole ["AH" "AS"] :flop ["7C" "7D" "3H"]} ;; top two pair
-                           ]]
+                           ]
+        strong-hands [{:hole ["8H" "8S"] :flop ["7C" "5D" "3H"]}
+                      {:hole ["AH" "8S"] :flop ["8C" "5D" "3H"]}]]
     (doseq [{:keys [hole flop]} very-strong-hands]
       (is (= :very-strong (fox/hand-category hole flop)) (str "should be very strong:" hole flop)))
+    (doseq [{:keys [hole flop]} strong-hands]
+      (is (= :strong (fox/hand-category hole flop)) (str "should be strong:" hole flop)))
     )
   )
