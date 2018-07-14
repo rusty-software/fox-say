@@ -81,7 +81,7 @@
       (str k ": " v "; "))]])
 
 (defn deal-display []
-  (let [game-type (:game-type @app-state)]
+  (let [{:keys [game-type showing-flop?]} @app-state]
     [:div
      [:form
       {:on-submit (fn [e]
@@ -118,14 +118,13 @@
                 :on-click #(deal-hole!)} "Deal"]
       [:button {:class "myButton" :on-click #(raise!)} "Raise"]
       [:button {:class "myButton" :on-click #(call!)} "Call"]
-      [:button {:class "myButton" :on-click #(fold!)} "Fold"]]]))
+      [:button {:class "myButton" :on-click #(fold!)} (if showing-flop? "Check" "Fold")]]]))
 
 (defn pre-flop-display []
   (let [{:keys [position action-to-you action-count hand
                 chosen-action correct-action result description
                 showing-pre-flop-results?]} @app-state]
     [:div
-     [:h3 "Pre Flop Trainer"]
      [:label
       [:input {:type "checkbox"
                :on-click #(show-pre-flop-results!)}]
