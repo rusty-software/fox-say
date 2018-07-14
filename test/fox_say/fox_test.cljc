@@ -475,24 +475,25 @@
       (is (fox/very-strong-made-hand? hand)))))
 
 (deftest test-made-hand?
-  (is (fox/made-hand? ["AH" "AS" "7C" "5D" "3H"]) "pair should be made")
-  (is (fox/made-hand? ["AH" "AS" "7C" "7D" "3H"]) "two pair should be made")
-  (is (fox/made-hand? ["AH" "AS" "AC" "5D" "3H"]) "trips should be made")
-  (is (fox/made-hand? ["AH" "AS" "AC" "AD" "3H"]) "quads should be made")
-  (is (fox/made-hand? ["KS" "QC" "JD" "TH" "9S"]) "straight should be made")
-  (is (fox/made-hand? ["KS" "JS" "9S" "7S" "5S"]) "flush should be made")
-  (is (fox/made-hand? ["AH" "AS" "AC" "5D" "5H"]) "full house should be made")
-  (is (not (fox/made-hand? ["KS" "JS" "9S" "7S" "5D"])) "trash should not be made")
-  (is (not (fox/made-hand? ["KS" "QC" "JD" "TH" "8S"])) "draw should not be made"))
+  (is (fox/made-hand? ["AH" "AS"] ["7C" "5D" "3H"]) "pair should be made")
+  (is (fox/made-hand? ["AH" "AS"] ["7C" "7D" "3H"]) "two pair should be made")
+  (is (fox/made-hand? ["AH" "AS"] ["AC" "5D" "3H"]) "trips should be made")
+  (is (fox/made-hand? ["AH" "AS"] ["AC" "AD" "3H"]) "quads should be made")
+  (is (fox/made-hand? ["KS" "QC"] ["JD" "TH" "9S"]) "straight should be made")
+  (is (fox/made-hand? ["KS" "JS"] ["9S" "7S" "5S"]) "flush should be made")
+  (is (fox/made-hand? ["AH" "AS"] ["AC" "5D" "5H"]) "full house should be made")
+  (is (not (fox/made-hand? ["KS" "JS"] ["9S" "7S" "5D"])) "trash should not be made")
+  (is (not (fox/made-hand? ["KS" "QC"] ["JD" "TH" "8S"])) "draw should not be made"))
 
-#_(deftest test-hand-category
-  (let [very-strong-hands [["AH" "AS" "AC" "AD" "3H"]       ;; quads
-                           ["AH" "AS" "AC" "5D" "5H"]       ;; full house
-                           ["KS" "JS" "9S" "7S" "5S"]       ;; flush
-                           ["KS" "QC" "JD" "TH" "9S"]       ;; straight
-                           ["AH" "AS" "AC" "5D" "3H"]       ;; trips
-                           ["AH" "AS" "7C" "7D" "3H"]       ;; top two pair
+(deftest test-hand-category
+  (let [very-strong-hands [{:hole ["AH" "AS"] :flop ["AC" "AD" "3H"]} ;; quads
+                           {:hole ["AH" "AS"] :flop ["AC" "5D" "5H"]} ;; full house
+                           {:hole ["KS" "JS"] :flop ["9S" "7S" "5S"]} ;; flush
+                           {:hole ["KS" "QC"] :flop ["JD" "TH" "9S"]} ;; straight
+                           {:hole ["AH" "AS"] :flop ["AC" "5D" "3H"]} ;; trips
+                           {:hole ["AH" "AS"] :flop ["7C" "7D" "3H"]} ;; top two pair
                            ]]
-    (doseq [hand very-strong-hands]
-      (is (= :very-strong (fox/hand-strength hand)))))
+    (doseq [{:keys [hole flop]} very-strong-hands]
+      (is (= :very-strong (fox/hand-category hole flop)) (str "should be very strong:" hole flop)))
+    )
   )

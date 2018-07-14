@@ -367,15 +367,18 @@
     (full-house? hand)
     (quads? hand)))
 
-(defn made-hand? [hand]
-  (or
-    (very-strong-made-hand? hand)
-    (pair? hand)
-    (two-pair? hand)))
+(defn made-hand? [hole flop]
+  (let [hand (concat hole flop)]
+    (or
+      (very-strong-made-hand? hand)
+      (pair? hand)
+      (two-pair? hand))))
 
-#_(defn hand-strength [hand]
-  (cond
-    (or )))
+(defn hand-category [hole flop]
+  (let [hand (concat hole flop)]
+    (cond
+      (very-strong-made-hand? hand) :very-strong
+      :else :trash)))
 
 (defmulti action-with (fn [street game-type position action-to-you action-count action] street))
 
