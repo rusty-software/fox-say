@@ -5,7 +5,7 @@
 (enable-console-print!)
 
 ;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (reagent/atom {:game-type :no-limit :position nil :action-to-you nil :action-count nil :hand nil :deck nil
+(defonce app-state (reagent/atom {:game-type :no-limit :position nil :street :pre-flop :action-to-you nil :action-count nil :hand nil :deck nil
                                   :chosen-action nil :correct-action nil :result nil :description nil
                                   :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :fold 0 :call 0 :raise 0}}))
 
@@ -14,7 +14,7 @@
 
 (defn deal-hole! []
   (let [{:keys [position action-to-you action-count hand deck]} (fox/deal-hole)]
-    (swap! app-state assoc :position position :action-to-you action-to-you :action-count action-count :hand hand :deck deck
+    (swap! app-state assoc :position position :street :pre-flop :action-to-you action-to-you :action-count action-count :hand hand :deck deck
            :chosen-action nil :correct-action nil :result nil :description nil
            :showing-flop? false)))
 
@@ -41,14 +41,15 @@
         (update :incorrect-count inc))))
 
 (defn check-proper-action [state action]
-  (let [{:keys [correct-action description]} (fox/action-with-description @app-state)
-        flop (fox/deal-flop @app-state)
+  (let [{:keys [correct-action description]} (fox/action-with-description state)
+        flop (fox/deal-flop state)
         result (if (= action correct-action) :correct :incorrect)
         flopping? (and (= :correct result) (not (= :fold correct-action)))
+        street (if flopping? :flop :pre-flop)
         updated-stats (update-stats state action correct-action)]
     (assoc state :chosen-action action :correct-action correct-action :result result
                  :description description :stats updated-stats
-                 :flop flop :showing-flop? flopping?)))
+                 :street street :flop flop :showing-flop? flopping?)))
 
 (defn raise! []
   (swap! app-state check-proper-action :raise))
