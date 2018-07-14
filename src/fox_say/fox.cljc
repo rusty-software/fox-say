@@ -366,9 +366,11 @@
 
 (defn top-pair-and-kicker? [hole flop]
   (let [hole-ranks (map rank hole)
-        top-hole-rank (apply max hole-ranks)]
+        top-hole-rank (apply max hole-ranks)
+        top-flop-rank (apply max (map rank flop))]
     (and (not (pair? hole))
          (pair? (concat hole flop))
+         (some #(= top-flop-rank %) hole-ranks)
          (or (= 14 top-hole-rank)
              (= [14 13] hole-ranks)))))
 
@@ -381,6 +383,9 @@
     (full-house? hand)
     (quads? hand)))
 
+(defn strong-made-hand? [hole flop]
+  (or (overpair? hole flop) (top-pair-and-kicker? hole flop)))
+
 (defn made-hand? [hole flop]
   (let [hand (concat hole flop)]
     (or
@@ -392,7 +397,8 @@
   (let [hand (concat hole flop)]
     (cond
       (very-strong-made-hand? hand) :very-strong
-      (or (overpair? hole flop) (top-pair-and-kicker? hole flop)) :strong
+      (strong-made-hand? hole flop) :strong
+      (pair? (concat hole flop)) :mediocre
       :else :trash)))
 
 (defmulti action-with (fn [street game-type position action-to-you action-count action] street))
