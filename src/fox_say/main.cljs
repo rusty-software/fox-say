@@ -53,9 +53,9 @@
                  :street :flop :flop flop :showing-flop? flopping?)))
 
 (defmethod check-proper-action :flop [state action]
-  (let [{:keys [correct-action description]} (fox/action-with-description state)
+  (let [{:keys [correct-action hand-category description]} (fox/action-with-description state)
         result (if (= action correct-action) :correct :incorrect)]
-    (assoc state :chosen-action action :correct-action correct-action :result result
+    (assoc state :chosen-action action :correct-action correct-action :hand-category hand-category :result result
                  :description description)))
 
 (defn raise! []
@@ -73,16 +73,17 @@
 (defn flop-passive! []
   (swap! app-state check-proper-action :passive))
 
-(defn action-results-display [chosen-action correct-action result description]
+(defn action-results-display [chosen-action correct-action result hand-category description]
   [:div
    [:hr]
    [:div (str "Chosen action: " (when chosen-action (name chosen-action)))]
    [:div (str "Proper action: " (when correct-action (name correct-action)))]
-
    [:div "Result: " (when result
                       (if (not= :correct result)
                         [:span {:class "incorrect"} (name result)]
                         [:span {:class "correct"} (name result)]))]
+   (when hand-category
+     [:div "Hand Category: " hand-category])
    [:div description]
    [:hr]])
 
@@ -180,14 +181,14 @@
 
 (defn display []
   (let [{:keys [showing-flop? showing-action-results? showing-stats?
-                chosen-action correct-action result description stats]} @app-state]
+                chosen-action correct-action result hand-category description stats]} @app-state]
     [:div
      (deal-display)
      (pre-flop-display)
      (when showing-flop?
        (flop-display))
      (when showing-action-results?
-       (action-results-display chosen-action correct-action result description))
+       (action-results-display chosen-action correct-action result hand-category description))
      (when showing-stats?
        (stats-display stats))]))
 

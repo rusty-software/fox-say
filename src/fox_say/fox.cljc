@@ -374,6 +374,16 @@
          (or (= 14 top-hole-rank)
              (= [14 13] hole-ranks)))))
 
+(defn top-pair-low-pair? [hole flop]
+  (let [hole-ranks (map rank hole)
+        hand (concat hole flop)
+        top-flop-rank (apply max (map rank flop))
+        second-flop-rank (second (sort > (map rank flop)))]
+    (and (not (pair? hole))
+         (two-pair? hand)
+         (some #(= top-flop-rank %) hole-ranks)
+         (not (some #(= second-flop-rank %) hole-ranks)))))
+
 (defn very-strong-made-hand? [hand]
   (or
     (top-two-pair? hand)
@@ -384,21 +394,25 @@
     (quads? hand)))
 
 (defn strong-made-hand? [hole flop]
-  (or (overpair? hole flop) (top-pair-and-kicker? hole flop)))
+  (or (overpair? hole flop)
+      (top-pair-and-kicker? hole flop)))
+
+(defn mediocre-made-hand? [hole flop]
+  (or (top-pair-low-pair? hole flop)
+      (pair? (concat hole flop))))
 
 (defn made-hand? [hole flop]
   (let [hand (concat hole flop)]
-    (or
-      (very-strong-made-hand? hand)
-      (pair? hand)
-      (two-pair? hand))))
+    (or (very-strong-made-hand? hand)
+        (pair? hand)
+        (two-pair? hand))))
 
 (defn hand-category [hole flop]
   (let [hand (concat hole flop)]
     (cond
       (very-strong-made-hand? hand) :very-strong
       (strong-made-hand? hole flop) :strong
-      (pair? (concat hole flop)) :mediocre
+      (mediocre-made-hand? hole flop) :mediocre
       :else :trash)))
 
 (defn action-with [_ game-type position action-to-you action-count action]
@@ -429,7 +443,6 @@
     {:correct-action correct-action
      :description description}))
 
-
 (defmethod action-with-description :flop [{:keys [hand flop] :as state}]
   (let [category (hand-category hand flop)
         proper-action-category {:very-strong :aggressive
@@ -437,6 +450,7 @@
                                 :mediocre :passive
                                 :trash :passive}]
     {:correct-action (get proper-action-category category)
+     :hand-category category
      :description "Very strong hands are almost always ahead, so should be played very aggressively.
      Strong hands are usually ahead, so aggressive play is appropriate.
      For mediocre hands, it depends on what you're holding, the community cards, and the number of other players.
