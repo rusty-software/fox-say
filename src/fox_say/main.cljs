@@ -6,7 +6,7 @@
 
 ;; define your app data so that it doesn't get over-written on reload
 (defonce app-state (reagent/atom {:game-type :no-limit :position nil :street :pre-flop :action-to-you nil :action-count nil :hand nil :deck nil
-                                  :chosen-action nil :correct-action nil :result nil :description nil
+                                  :chosen-action nil :correct-action nil :result nil :hand-category nil :description nil
                                   :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :fold 0 :call 0 :raise 0}}))
 
 (defn set-game-type! [game-type]
@@ -15,7 +15,7 @@
 (defn deal-hole! []
   (let [{:keys [position action-to-you action-count hand deck]} (fox/deal-hole)]
     (swap! app-state assoc :position position :street :pre-flop :action-to-you action-to-you :action-count action-count :hand hand :deck deck
-           :chosen-action nil :correct-action nil :result nil :description nil
+           :chosen-action nil :correct-action nil :result nil :hand-category nil :description nil
            :showing-flop? false)))
 
 (defn toggle [app-state key]

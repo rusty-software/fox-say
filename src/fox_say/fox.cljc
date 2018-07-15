@@ -371,7 +371,7 @@
     (and (not (pair? hole))
          (pair? (concat hole flop))
          (some #(= top-flop-rank %) hole-ranks)
-         (or (= 14 top-hole-rank)
+         (or (and (= 14 top-hole-rank) (not (= 14 top-flop-rank)))
              (= [14 13] hole-ranks)))))
 
 (defn top-pair-low-pair? [hole flop]

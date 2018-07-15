@@ -479,7 +479,8 @@
   (is (fox/top-pair-and-kicker? ["AH" "KS"] ["AC" "5D" "3H"]))
   (is (not (fox/top-pair-and-kicker? ["KH" "QS"] ["KC" "5D" "3H"])))
   (is (not (fox/top-pair-and-kicker? ["AH" "AS"] ["8C" "5D" "3H"])))
-  (is (not (fox/top-pair-and-kicker? ["AH" "5S"] ["8C" "5D" "3H"]))))
+  (is (not (fox/top-pair-and-kicker? ["AH" "5S"] ["8C" "5D" "3H"])))
+  (is (not (fox/top-pair-and-kicker? ["AC" "QD"] ["AH" "TC" "7C"]))))
 
 (deftest test-top-pair-low-pair?
   (is (fox/top-pair-low-pair? ["AH" "QS"] ["AC" "KD" "QH"]))
@@ -501,7 +502,8 @@
   (is (fox/strong-made-hand? ["8H" "8S"] ["7C" "5D" "3H"]))
   (is (fox/strong-made-hand? ["AH" "8S"] ["8C" "5D" "3H"]))
   (is (fox/strong-made-hand? ["AH" "QS"] ["AC" "KD" "QH"]))
-  (is (not (fox/strong-made-hand? ["AH" "5S"] ["8C" "5D" "3H"]))))
+  (is (not (fox/strong-made-hand? ["AH" "5S"] ["8C" "5D" "3H"])))
+  (is (not (fox/strong-made-hand? ["AC" "QD"] ["AH" "TC" "7C"]))))
 
 (deftest test-mediocre-made-hand?
   (is (fox/mediocre-made-hand? ["KH" "7S"] ["7C" "5D" "3H"]))
@@ -531,7 +533,8 @@
         mediocre-hands [{:hole ["KH" "7S"] :flop ["7C" "5D" "3H"]}
                         {:hole ["AH" "5S"] :flop ["8C" "5D" "3H"]}
                         {:hole ["AH" "3S"] :flop ["8C" "5D" "3H"]}
-                        {:hole ["KH" "KS"] :flop ["AC" "5D" "3H"]}]]
+                        {:hole ["KH" "KS"] :flop ["AC" "5D" "3H"]}
+                        {:hole ["AC" "QD"] :flop ["AH" "TC" "7C"]}]]
     (doseq [{:keys [hole flop]} very-strong-hands]
       (is (= :very-strong (fox/hand-category hole flop)) (str "should be very strong:" hole flop)))
     (doseq [{:keys [hole flop]} strong-hands]
