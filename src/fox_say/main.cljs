@@ -40,19 +40,23 @@
         (update correct-action inc)
         (update :incorrect-count inc))))
 
-(defn check-proper-action [state action]
+(defmulti check-proper-action (fn [state action] (:street state)))
+
+(defmethod check-proper-action :pre-flop [state action]
   (let [{:keys [correct-action description]} (fox/action-with-description state)
         flop (fox/deal-flop state)
         result (if (= action correct-action) :correct :incorrect)
         flopping? (and (= :correct result) (not (= :fold correct-action)))
-        street (if (or flopping?
-                       (= :flop (:street state)))
-                 :flop
-                 :pre-flop)
         updated-stats (update-stats state action correct-action)]
     (assoc state :chosen-action action :correct-action correct-action :result result
                  :description description :stats updated-stats
-                 :street street :flop flop :showing-flop? flopping?)))
+                 :street :flop :flop flop :showing-flop? flopping?)))
+
+(defmethod check-proper-action :flop [state action]
+  (let [{:keys [correct-action description]} (fox/action-with-description state)
+        result (if (= action correct-action) :correct :incorrect)]
+    (assoc state :chosen-action action :correct-action correct-action :result result
+                 :description description)))
 
 (defn raise! []
   (swap! app-state check-proper-action :raise))
@@ -62,6 +66,12 @@
 
 (defn fold! []
   (swap! app-state check-proper-action :fold))
+
+(defn flop-aggressive! []
+  (swap! app-state check-proper-action :aggressive))
+
+(defn flop-passive! []
+  (swap! app-state check-proper-action :passive))
 
 (defn action-results-display [chosen-action correct-action result description]
   [:div
@@ -83,8 +93,19 @@
     (for [[k v] stats]
       (str k ": " v "; "))]])
 
+(defn pre-flop-buttons []
+  [:span
+   [:button {:class "myButton" :on-click #(raise!)} "Raise"]
+   [:button {:class "myButton" :on-click #(call!)} "Call"]
+   [:button {:class "myButton" :on-click #(fold!)} "Fold"]])
+
+(defn flop-buttons []
+  [:span
+   [:button {:class "myButton" :on-click #(flop-aggressive!)} "Bet/Raise"]
+   [:button {:class "myButton" :on-click #(flop-passive!)} "Check/Fold"]])
+
 (defn deal-display []
-  (let [{:keys [game-type]} @app-state]
+  (let [{:keys [game-type showing-flop?]} @app-state]
     [:div
      [:form
       {:on-submit (fn [e]
@@ -123,9 +144,9 @@
       [:button {:class "myButton"
                 :auto-focus true
                 :on-click #(deal-hole!)} "Deal"]
-      [:button {:class "myButton" :on-click #(raise!)} "Raise"]
-      [:button {:class "myButton" :on-click #(call!)} "Call"]
-      [:button {:class "myButton" :on-click #(fold!)} "Fold"]]]))
+      (if showing-flop?
+        (flop-buttons)
+        (pre-flop-buttons))]]))
 
 (defn pre-flop-display []
   (let [{:keys [position action-to-you action-count hand result]} @app-state]

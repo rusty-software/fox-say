@@ -429,10 +429,14 @@
     {:correct-action correct-action
      :description description}))
 
+
 (defmethod action-with-description :flop [{:keys [hand flop] :as state}]
-  (println "action-with-description for flop")
-  (let [category (hand-category hand flop)]
-    {:correct-action category
+  (let [category (hand-category hand flop)
+        proper-action-category {:very-strong :aggressive
+                                :strong :aggressive
+                                :mediocre :passive
+                                :trash :passive}]
+    {:correct-action (get proper-action-category category)
      :description "Very strong hands are almost always ahead, so should be played very aggressively.
      Strong hands are usually ahead, so aggressive play is appropriate.
      For mediocre hands, it depends on what you're holding, the community cards, and the number of other players.
