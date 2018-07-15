@@ -84,7 +84,11 @@
                         [:span {:class "correct"} (name result)]))]
    (when hand-category
      [:div "Hand Category: " hand-category])
-   [:div description]
+   [:div (if (coll? description)
+           (for [d description]
+             ^{:key (rand-int 1000000)}
+             [:div d])
+           description)]
    [:hr]])
 
 (defn stats-display [stats]

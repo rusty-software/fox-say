@@ -395,11 +395,11 @@
 
 (defn strong-made-hand? [hole flop]
   (or (overpair? hole flop)
+      (top-pair-low-pair? hole flop)
       (top-pair-and-kicker? hole flop)))
 
 (defn mediocre-made-hand? [hole flop]
-  (or (top-pair-low-pair? hole flop)
-      (pair? (concat hole flop))))
+  (pair? (concat hole flop)))
 
 (defn made-hand? [hole flop]
   (let [hand (concat hole flop)]
@@ -451,10 +451,10 @@
                                 :trash :passive}]
     {:correct-action (get proper-action-category category)
      :hand-category category
-     :description "Very strong hands are almost always ahead, so should be played very aggressively.
-     Strong hands are usually ahead, so aggressive play is appropriate.
-     For mediocre hands, it depends on what you're holding, the community cards, and the number of other players.
-     For trash, an occasional bluff is OK, but you should usually fold with any action."}))
+     :description ["Very strong hands: quads, full house, flush, straight, trips, top two pair."
+                   "Strong hands: overpairs, top pair with lower pair, top pair with top kicker."
+                   "Mediocre hands: any other pair."
+                   "Trash hands: no pair."]}))
 
 (defn deal-hole []
   (let [position (rand-nth (seq positions))

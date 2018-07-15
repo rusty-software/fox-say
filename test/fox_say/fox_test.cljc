@@ -500,11 +500,11 @@
 (deftest test-strong-made-hand?
   (is (fox/strong-made-hand? ["8H" "8S"] ["7C" "5D" "3H"]))
   (is (fox/strong-made-hand? ["AH" "8S"] ["8C" "5D" "3H"]))
+  (is (fox/strong-made-hand? ["AH" "QS"] ["AC" "KD" "QH"]))
   (is (not (fox/strong-made-hand? ["AH" "5S"] ["8C" "5D" "3H"]))))
 
 (deftest test-mediocre-made-hand?
   (is (fox/mediocre-made-hand? ["KH" "7S"] ["7C" "5D" "3H"]))
-  (is (fox/mediocre-made-hand? ["AH" "QS"] ["AC" "KD" "QH"]))
   (is (not (fox/mediocre-made-hand? ["AH" "KS"] ["AC" "KD" "QH"]))))
 
 (deftest test-made-hand?
@@ -526,12 +526,12 @@
                            {:hole ["AH" "AS"] :flop ["AC" "5D" "3H"]}
                            {:hole ["AH" "AS"] :flop ["7C" "7D" "3H"]}]
         strong-hands [{:hole ["8H" "8S"] :flop ["7C" "5D" "3H"]}
+                      {:hole ["AH" "QS"] :flop ["AC" "KD" "QH"]}
                       {:hole ["AH" "8S"] :flop ["8C" "5D" "3H"]}]
         mediocre-hands [{:hole ["KH" "7S"] :flop ["7C" "5D" "3H"]}
                         {:hole ["AH" "5S"] :flop ["8C" "5D" "3H"]}
                         {:hole ["AH" "3S"] :flop ["8C" "5D" "3H"]}
-                        {:hole ["KH" "KS"] :flop ["AC" "5D" "3H"]}
-                        {:hole ["AH" "QS"] :flop ["AC" "KD" "QH"]}]]
+                        {:hole ["KH" "KS"] :flop ["AC" "5D" "3H"]}]]
     (doseq [{:keys [hole flop]} very-strong-hands]
       (is (= :very-strong (fox/hand-category hole flop)) (str "should be very strong:" hole flop)))
     (doseq [{:keys [hole flop]} strong-hands]
