@@ -47,10 +47,11 @@
         flop (fox/deal-flop state)
         result (if (= action correct-action) :correct :incorrect)
         flopping? (and (= :correct result) (not (= :fold correct-action)))
+        street (if flopping? :flop :pre-flop)
         updated-stats (update-stats state action correct-action)]
     (assoc state :chosen-action action :correct-action correct-action :result result
                  :description description :stats updated-stats
-                 :street :flop :flop flop :showing-flop? flopping?)))
+                 :street street :flop flop :showing-flop? flopping?)))
 
 (defmethod check-proper-action :flop [state action]
   (let [{:keys [correct-action hand-category description]} (fox/action-with-description state)
