@@ -466,6 +466,7 @@
       (strong-made-hand? hole flop) :strong
       (strong-draw-hand? hand) :strong
       (mediocre-made-hand? hole flop) :mediocre
+      (mediocre-draw-hand? hole flop) :mediocre
       :else :trash)))
 
 (defn action-with [_ game-type position action-to-you action-count action]

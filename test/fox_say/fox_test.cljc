@@ -567,9 +567,10 @@
     (doseq [hand hands]
       (is (fox/strong-draw-hand? hand)))))
 
-(deftest test-overcards?
+(deftest test-mediocre-draw-hands?
   (let [hands [{:hole ["AH" "KH"] :flop ["QH" "TC" "5D"]}
-               {:hole ["QD" "9C"] :flop ["8C" "7C" "2D"]}]]
+               {:hole ["QD" "9C"] :flop ["8C" "7C" "2D"]}
+               {:hole ["JS" "QC"] :flop ["2H" "3D" "8D"]}]]
     (doseq [{:keys [hole flop]} hands]
       (is (fox/mediocre-draw-hand? hole flop)))
     (is (not (fox/mediocre-draw-hand? ["AH" "TD"] ["JC" "5S" "2H"])))))
