@@ -465,9 +465,10 @@
                                          :hand ["AS" "AH"]})))))
 
 (deftest test-top-two-pair?
-  (is (fox/top-two-pair? ["3H" "AH" "AS" "7C" "7D"]))
-  (is (not (fox/top-two-pair? ["AH" "AS" "7C" "3D" "3H"])))
-  (is (not (fox/top-two-pair? ["KS" "JS" "9S" "7S" "5D"]))))
+  (is (fox/top-two-pair? ["3H" "AH"] ["AS" "7C" "7D"]))
+  (is (fox/top-two-pair? ["5S" "AS"] ["3S" "3C" "5D"]))
+  (is (not (fox/top-two-pair? ["AH" "AS"] ["7C" "3D" "3H"])))
+  (is (not (fox/top-two-pair? ["KS" "JS"] ["9S" "7S" "5D"]))))
 
 (deftest test-overpair?
   (is (fox/overpair? ["8H" "8S"] ["7C" "5D" "3H"]))

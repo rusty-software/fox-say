@@ -353,10 +353,14 @@
       (suited-connector-match hand ranks suited-connectors)
       (suited-one-gap-match hand ranks suited-one-gaps))))
 
-(defn top-two-pair? [hand]
-  (let [rank-frequencies (rank-frequencies hand)
-        top-two (take 2 (into (sorted-map-by >) rank-frequencies))]
-    (= 2 (val (first top-two)) (val (second top-two)))))
+;; TODO: should take top pair from flop, then include hole
+(defn top-two-pair?
+  ([hand]
+    (let [rank-frequencies (rank-frequencies hand)
+           top-two (take 2 (into (sorted-map-by >) rank-frequencies))]
+       (= 2 (val (first top-two)) (val (second top-two)))))
+  ([hole flop]
+   (top-two-pair? (concat hole flop))))
 
 (defn overpair? [hole flop]
   (let [top-hole-rank (apply max (map rank hole))
@@ -440,6 +444,7 @@
     (or (and (>= straight-draw-count 3) (= flush-draw-count 4))
         (and (>= flush-draw-count 3) (= straight-draw-count 4)))))
 
+;; TODO: should probably consider hole versus flop
 (defn strong-draw-hand? [hand]
   (let [straight-draw-count (straight-draw-count hand)
         flush-draw-count (flush-draw-count hand)]
