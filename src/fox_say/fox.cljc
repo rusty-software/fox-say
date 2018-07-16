@@ -437,13 +437,26 @@
     (or (and (>= straight-draw-count 3) (= flush-draw-count 4))
         (and (>= flush-draw-count 3) (= straight-draw-count 4)))))
 
-(defn draw-hand? [hand])
+(defn strong-draw-hand? [hand]
+  (let [straight-draw-count (straight-draw-count hand)
+        flush-draw-count (flush-draw-count hand)]
+    (or (>= straight-draw-count 3) (>= flush-draw-count 3))))
+
+(defn mediocre-draw-hand? [hole flop]
+  (let [hole-ranks (map rank hole)
+        flop-ranks (map rank flop)
+        hole-over-flop (for [hr hole-ranks
+                             fr flop-ranks]
+                         (> hr fr))]
+    (every? identity hole-over-flop)))
 
 (defn hand-category [hole flop]
   (let [hand (concat hole flop)]
     (cond
       (very-strong-made-hand? hand) :very-strong
+      (very-strong-draw-hand? hand) :very-strong
       (strong-made-hand? hole flop) :strong
+      (strong-draw-hand? hand) :strong
       (mediocre-made-hand? hole flop) :mediocre
       :else :trash)))
 

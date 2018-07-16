@@ -534,7 +534,7 @@
                         {:hole ["AH" "5S"] :flop ["8C" "5D" "3H"]}
                         {:hole ["AH" "3S"] :flop ["8C" "5D" "3H"]}
                         {:hole ["KH" "KS"] :flop ["AC" "5D" "3H"]}
-                        {:hole ["AC" "QD"] :flop ["AH" "TC" "7C"]}]]
+                        {:hole ["AC" "QD"] :flop ["AH" "TC" "7D"]}]]
     (doseq [{:keys [hole flop]} very-strong-hands]
       (is (= :very-strong (fox/hand-category hole flop)) (str "should be very strong:" hole flop)))
     (doseq [{:keys [hole flop]} strong-hands]
@@ -556,3 +556,17 @@
                ["QD" "9C" "8C" "7C" "2C"]]]
     (doseq [hand hands]
       (is (fox/very-strong-draw-hand? hand)))))
+
+(deftest test-strong-draw-hands
+  (let [hands [["AH" "KH" "QH" "TC" "5D"]
+               ["TS" "9S" "8C" "5D" "2H"]
+               ["QD" "9C" "8C" "7C" "2D"]]]
+    (doseq [hand hands]
+      (is (fox/strong-draw-hand? hand)))))
+
+(deftest test-overcards?
+  (let [hands [{:hole ["AH" "KH"] :flop ["QH" "TC" "5D"]}
+               {:hole ["QD" "9C"] :flop ["8C" "7C" "2D"]}]]
+    (doseq [{:keys [hole flop]} hands]
+      (is (fox/mediocre-draw-hand? hole flop)))
+    (is (not (fox/mediocre-draw-hand? ["AH" "TD"] ["JC" "5S" "2H"])))))
