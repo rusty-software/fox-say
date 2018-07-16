@@ -508,7 +508,8 @@
 
 (deftest test-mediocre-made-hand?
   (is (fox/mediocre-made-hand? ["KH" "7S"] ["7C" "5D" "3H"]))
-  (is (not (fox/mediocre-made-hand? ["AH" "KS"] ["AC" "KD" "QH"]))))
+  (is (fox/mediocre-made-hand? ["6H" "6S"] ["QC" "QD" "9H"]))
+  (is (not (fox/mediocre-made-hand? ["AH" "TS"] ["KC" "QD" "JH"]))))
 
 (deftest test-made-hand?
   (is (fox/made-hand? ["AH" "AS"] ["7C" "5D" "3H"]) "pair should be made")

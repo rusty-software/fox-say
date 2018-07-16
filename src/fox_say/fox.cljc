@@ -398,8 +398,11 @@
       (top-pair-low-pair? hole flop)
       (top-pair-and-kicker? hole flop)))
 
-(defn mediocre-made-hand? [hole flop]
-  (pair? (concat hole flop)))
+(defn mediocre-made-hand?
+  "Note that two pair is mediocre if not holding top pair or overpair. As such, this should be evaluated AFTER those two."
+  [hole flop]
+  (or (two-pair? (concat hole flop))
+      (pair? (concat hole flop))))
 
 (defn made-hand? [hole flop]
   (let [hand (concat hole flop)]
