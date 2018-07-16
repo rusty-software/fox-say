@@ -496,10 +496,13 @@
                                 :trash :passive}]
     {:correct-action (get proper-action-category category)
      :hand-category category
-     :description ["Very strong hands: quads, full house, flush, straight, trips, top two pair."
-                   "Strong hands: overpairs, top pair with lower pair, top pair with top kicker."
-                   "Mediocre hands: any other pair."
-                   "Trash hands: no pair."]}))
+     :description ["Very strong made hands: quads, full house, flush, straight, trips, top two pair."
+                   "Very strong draw hands: 4 to a flush, >= 3 to a straight or vice versa."
+                   "Strong made hands: overpairs, top pair with lower pair, top pair with top kicker."
+                   "Strong draw hands: >= 3 to a straight or flush, but not simultaneously."
+                   "Mediocre made hands: any other pair."
+                   "Mediocre draw hands: overcards."
+                   "Trash hands: no made hand, no draw hand (including gutshot for now)."]}))
 
 (defn deal-hole []
   (let [position (rand-nth (seq positions))
