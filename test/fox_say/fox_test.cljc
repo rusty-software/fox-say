@@ -502,6 +502,7 @@
   (is (fox/strong-made-hand? ["8H" "8S"] ["7C" "5D" "3H"]))
   (is (fox/strong-made-hand? ["AH" "8S"] ["8C" "5D" "3H"]))
   (is (fox/strong-made-hand? ["AH" "QS"] ["AC" "KD" "QH"]))
+  (is (fox/strong-made-hand? ["KH" "AS"] ["AC" "JD" "8H"]))
   (is (not (fox/strong-made-hand? ["AH" "5S"] ["8C" "5D" "3H"])))
   (is (not (fox/strong-made-hand? ["AC" "QD"] ["AH" "TC" "7C"]))))
 

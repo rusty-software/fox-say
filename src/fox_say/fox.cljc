@@ -365,7 +365,7 @@
          (> top-hole-rank top-flop-rank))))
 
 (defn top-pair-and-kicker? [hole flop]
-  (let [hole-ranks (map rank hole)
+  (let [hole-ranks (hand-ranks hole)
         top-hole-rank (apply max hole-ranks)
         top-flop-rank (apply max (map rank flop))]
     (and (not (pair? hole))
@@ -375,7 +375,7 @@
              (= [14 13] hole-ranks)))))
 
 (defn top-pair-low-pair? [hole flop]
-  (let [hole-ranks (map rank hole)
+  (let [hole-ranks (hand-ranks hole)
         hand (concat hole flop)
         top-flop-rank (apply max (map rank flop))
         second-flop-rank (second (sort > (map rank flop)))]
