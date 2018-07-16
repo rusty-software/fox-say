@@ -407,6 +407,38 @@
         (pair? hand)
         (two-pair? hand))))
 
+(defn flush-draw-count [hand]
+  (apply max (vals (suit-frequencies hand))))
+
+(defn sequential-seqs
+  "Ask Dave Nolen for a description
+  https://stackoverflow.com/questions/2720958/clojure-finding-sequential-items-from-a-sequence"
+  ([] [])
+  ([a] a)
+  ([a b] (let [n (last (last a))]
+           (if (and n (= (inc n) b))
+             (update-in a [(dec (count a))] conj b)
+             (conj a [b])))))
+
+(defn largest
+  "Ask Dave Nolen for a description
+  https://stackoverflow.com/questions/2720958/clojure-finding-sequential-items-from-a-sequence"
+  ([] nil)
+  ([a] a)
+  ([a b] (if (> (count b) (count a)) b a)))
+
+(defn straight-draw-count [hand]
+  (let [hand-ranks (vec (sort (map rank hand)))]
+    (count (reduce largest (reduce sequential-seqs [] hand-ranks)))))
+
+(defn very-strong-draw-hand? [hand]
+  (let [straight-draw-count (straight-draw-count hand)
+        flush-draw-count (flush-draw-count hand)]
+    (or (and (>= straight-draw-count 3) (= flush-draw-count 4))
+        (and (>= flush-draw-count 3) (= straight-draw-count 4)))))
+
+(defn draw-hand? [hand])
+
 (defn hand-category [hole flop]
   (let [hand (concat hole flop)]
     (cond

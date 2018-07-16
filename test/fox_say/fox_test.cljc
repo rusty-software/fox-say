@@ -541,3 +541,18 @@
       (is (= :strong (fox/hand-category hole flop)) (str "should be strong:" hole flop)))
     (doseq [{:keys [hole flop]} mediocre-hands]
       (is (= :mediocre (fox/hand-category hole flop)) (str "should be mediocre:" hole flop)))))
+
+(deftest test-flush-draw-count
+  (is (= 4 (fox/flush-draw-count ["AH" "KH" "QH" "JH" "5D"])))
+  (is (= 3 (fox/flush-draw-count ["TS" "9S" "8S" "7C" "5D"]))))
+
+(deftest test-straight-draw-count
+  (is (= 4 (fox/straight-draw-count ["AH" "KH" "QH" "JH" "5D"])))
+  (is (= 3 (fox/straight-draw-count ["TS" "9S" "8S" "6C" "5D"]))))
+
+(deftest test-very-strong-draw-hands
+  (let [hands [["AH" "KH" "QH" "JH" "5D"]
+               ["TS" "9S" "8S" "7C" "5D"]
+               ["QD" "9C" "8C" "7C" "2C"]]]
+    (doseq [hand hands]
+      (is (fox/very-strong-draw-hand? hand)))))
