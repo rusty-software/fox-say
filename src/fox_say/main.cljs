@@ -107,8 +107,8 @@
 
 (defn flop-buttons []
   [:span
-   [:button {:class "myButton" :on-click #(flop-aggressive!)} "Bet/Raise"]
-   [:button {:class "myButton" :on-click #(flop-passive!)} "Check/Fold"]])
+   [:button {:class "myButton" :on-click #(flop-aggressive!)} "Aggressive"]
+   [:button {:class "myButton" :on-click #(flop-passive!)} "Passive"]])
 
 (defn deal-display []
   (let [{:keys [game-type showing-flop?]} @app-state]
@@ -122,6 +122,8 @@
                          "r" (raise!)
                          "c" (call!)
                          "f" (fold!)
+                         "a" (flop-aggressive!)
+                         "p" (flop-passive!)
                          "pressed something i don't care about"))}
       [:label
        [:input {:type "radio"
