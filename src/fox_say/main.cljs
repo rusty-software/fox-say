@@ -98,7 +98,7 @@
   [:div
    [:hr]
    [:code
-    (for [[k v] stats]
+    (for [[k v] (into (sorted-map) stats)]
       (str k ": " v "; "))]])
 
 (defn pre-flop-buttons []
