@@ -7,7 +7,8 @@
 ;; define your app data so that it doesn't get over-written on reload
 (defonce app-state (reagent/atom {:game-type :no-limit :position nil :street :pre-flop :action-to-you nil :action-count nil :hand nil :deck nil
                                   :chosen-action nil :correct-action nil :result nil :hand-category nil :description nil
-                                  :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :fold 0 :call 0 :raise 0}}))
+                                  :stats {:hand-count 0 :correct-count 0 :incorrect-count 0 :fold 0 :call 0 :raise 0
+                                          :flop-correct-count 0 :flop-incorrect-count 0 :aggressive 0 :passive 0}}))
 
 (defn set-game-type! [game-type]
   (swap! app-state assoc :game-type game-type))
@@ -29,16 +30,16 @@
   (let [toggled (toggle @app-state :showing-stats?)]
     (reset! app-state toggled)))
 
-(defn update-stats [{:keys [stats]} action correct-action]
-  (if (= action correct-action)
+(defn update-stats [{:keys [stats street]} action correct-action]
+  (let [inc-key (cond
+                  (and (= :pre-flop street) (= action correct-action)) :correct-count
+                  (and (= :pre-flop street) (not (= action correct-action))) :incorrect-count
+                  (and (= :flop street) (= action correct-action)) :flop-correct-count
+                  (and (= :flop street) (not (= action correct-action))) :flop-incorrect-count)]
     (-> stats
         (update :hand-count inc)
         (update correct-action inc)
-        (update :correct-count inc))
-    (-> stats
-        (update :hand-count inc)
-        (update correct-action inc)
-        (update :incorrect-count inc))))
+        (update inc-key inc))))
 
 (defmulti check-proper-action (fn [state action] (:street state)))
 
@@ -55,9 +56,10 @@
 
 (defmethod check-proper-action :flop [state action]
   (let [{:keys [correct-action hand-category description]} (fox/action-with-description state)
-        result (if (= action correct-action) :correct :incorrect)]
+        result (if (= action correct-action) :correct :incorrect)
+        updated-stats (update-stats state action correct-action)]
     (assoc state :chosen-action action :correct-action correct-action :hand-category hand-category :result result
-                 :description description)))
+                 :description description :stats updated-stats)))
 
 (defn raise! []
   (swap! app-state check-proper-action :raise))
