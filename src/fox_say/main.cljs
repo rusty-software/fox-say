@@ -117,16 +117,7 @@
     [:div
      [:form
       {:on-submit (fn [e]
-                    (.preventDefault e))
-       :on-key-press (fn [e]
-                       (case (.-key e)
-                         "d" (deal-hole!)
-                         "r" (raise!)
-                         "c" (call!)
-                         "f" (fold!)
-                         "a" (flop-aggressive!)
-                         "p" (flop-passive!)
-                         "pressed something i don't care about"))}
+                    (.preventDefault e))}
       [:label
        [:input {:type "radio"
                 :name "game-type"
@@ -203,7 +194,16 @@
 
 (reagent/render-component
   [display]
-  (. js/document (getElementById "app")))
+  (. js/document (getElementById "app"))
+  (. js/document (addEventListener "keydown" (fn [e]
+                                               (case (.-key e)
+                                                 "d" (deal-hole!)
+                                                 "r" (raise!)
+                                                 "c" (call!)
+                                                 "f" (fold!)
+                                                 "a" (flop-aggressive!)
+                                                 "p" (flop-passive!)
+                                                 "pressed something i don't care about")))))
 
 (defn on-js-reload []
   ;; optionally touch your app-state to force rerendering depending on
