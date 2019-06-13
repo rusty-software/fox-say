@@ -14,13 +14,17 @@
   (swap! app-state assoc :game-type game-type))
 
 (defn deal-hole! []
-  (let [{:keys [position action-to-you action-count hand deck]} (fox/deal-hole)]
+  (let [{:keys [position action-to-you action-count hand deck]} (fox/deal-hole (:quality-hands-only? @app-state))]
     (swap! app-state assoc :position position :street :pre-flop :action-to-you action-to-you :action-count action-count :hand hand :deck deck
            :chosen-action nil :correct-action nil :result nil :hand-category nil :description nil
            :showing-flop? false)))
 
 (defn toggle [app-state key]
   (assoc app-state key (not (get app-state key))))
+
+(defn quality-hands-only! []
+  (let [toggled (toggle @app-state :quality-hands-only?)]
+    (reset! app-state toggled)))
 
 (defn show-action-results! []
   (let [toggled (toggle @app-state :showing-action-results?)]
@@ -135,6 +139,10 @@
        "Low Limit"]
       [:label
        [:input {:type "checkbox"
+                :on-click #(quality-hands-only!)}]
+       "Quality Hands Only"]
+      [:label
+       [:input {:type "checkbox"
                 :on-click #(show-action-results!)}]
        "Show Action Results"]
       [:label
@@ -180,7 +188,7 @@
       ]]))
 
 (defn display []
-  (let [{:keys [showing-flop? showing-action-results? showing-stats?
+  (let [{:keys [showing-flop? showing-action-results? showing-stats? quality-hands-only?
                 chosen-action correct-action result hand-category description stats]} @app-state]
     [:div
      (deal-display)

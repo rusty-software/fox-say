@@ -76,10 +76,19 @@
   (is (not (fox/suited-connector? ["AH" "QS"] [14 12]))))
 
 (deftest test-deal
-  (let [{:keys [position action-to-you hand]} (fox/deal-hole)]
+  (let [{:keys [position action-to-you hand]} (fox/deal-hole false)]
     (is (fox/positions position))
     (is (fox/actions-to-you action-to-you))
     (is (= 2 (count hand)))))
+
+(deftest test-quality-hand?
+  (let [hand (:hand (fox/deal-hole true))
+        hand-ranks (fox/hand-ranks hand)]
+    (is (or (fox/pair? hand)
+            (fox/suited-connector? hand hand-ranks)
+            (fox/suited-one-gap? hand hand-ranks)
+            (every? #(> % 9) hand-ranks)
+            (contains? hand-ranks 14)))))
 
 (deftest test-early
   (let [raising-hands [["AS" "AD"] ["KS" "KH"] ["QC" "QD"] ["JS" "JH"] ["TS" "TH"] ["AC" "KC"] ["AD" "KS"] ["AS" "QD"]]
@@ -466,7 +475,7 @@
 
 (deftest test-top-two-pair?
   (is (fox/top-two-pair? ["3H" "AH"] ["AS" "7C" "7D"]))
-  (is (fox/top-two-pair? ["5S" "AS"] ["3S" "3C" "5D"]))
+  (is (fox/top-two-pair? ["5S" "AS"] ["AH" "3C" "5D"]))
   (is (not (fox/top-two-pair? ["AH" "AS"] ["7C" "3D" "3H"])))
   (is (not (fox/top-two-pair? ["KS" "JS"] ["9S" "7S" "5D"]))))
 

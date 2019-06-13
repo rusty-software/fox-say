@@ -113,65 +113,65 @@
 
 (def no-limit-pre-flop-proper-actions
   {:early {:called {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
-                                                     (styled-cards-from-rank :suited "A" "Q")
-                                                     (styled-cards-from-rank :unsuited "A" "Q"))}}
-            :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
-                                                     (styled-cards-from-rank :suited "A" "Q")
-                                                     (styled-cards-from-rank :unsuited "A" "Q"))}}}
-
-    :blind {:called {:raise {player-count-na (concat (pairs-for-ranks "A" "8")
-                                                     (styled-cards-from-rank :suited "A" "J")
-                                                     (styled-cards-from-rank :unsuited "A" "J"))}
-                     :call {player-count-na [{:suited-connector :any}
-                                             {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 10]}]}}
-            :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "Q")
-                                                     [{:suited [14 13]} {:unsuited [14 13]}])}
-                     :call {player-count-na (concat (pairs-for-ranks "J" "7")
-                                                    [{:suited-connector :any}
-                                                     {:suited-one-gap :any}])}}}
-
-    :middle {:folded {:raise {player-count-na (concat (pairs-for-ranks "A" "7")
-                                                      (styled-cards-from-rank :suited "A" "T")
-                                                      (styled-cards-from-rank :unsuited "A" "J")
-                                                      (styled-cards-from-rank :suited "K" "T")
-                                                      (styled-cards-from-rank :suited "Q" "T"))}}
-             :called {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
-                                                      (styled-cards-from-rank :unsuited "A" "J"))}
-                      :call {player-count-na (concat (pairs-for-ranks "9" "2")
-                                                     [{:suited-connector :any}
-                                                      {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 10]}])}}
-             :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
-                                                      (styled-cards-from-rank :suited "A" "Q")
-                                                      (styled-cards-from-rank :unsuited "A" "Q"))}
-                      :call {player-count-na (concat (pairs-for-ranks "9" "2")
-                                                     [{:suited-connector :any}])}}}
-
-    :late {:folded {:raise {player-count-na (concat (styled-cards-from-rank :suited "A" "2")
-                                                    (styled-cards-from-rank :unsuited "A" "7")
-                                                    (styled-cards-from-rank :suited "K" "T")
-                                                    (styled-cards-from-rank :unsuited "K" "T")
-                                                    (styled-cards-from-rank :suited "Q" "T")
-                                                    (styled-cards-from-rank :unsuited "Q" "T")
-                                                    (styled-cards-from-rank :suited "J" "T")
-                                                    (styled-cards-from-rank :unsuited "J" "T")
-                                                    [{:pair :any}
-                                                     {:suited-connector :any}])}}
-           :called {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
-                                                    (styled-cards-from-rank :suited "A" "J")
-                                                    (styled-cards-from-rank :unsuited "A" "J"))}
-                    :call {player-count-na (concat (pairs-for-ranks "9" "2")
-                                                   (styled-cards-from-rank :suited "K" "9")
-                                                   (styled-cards-from-rank :suited "Q" "9")
-                                                   (styled-cards-from-rank :suited "J" "9")
-                                                   [{:suited-connector :any}
-                                                    {:suited [14 10]} {:suited [14 9]} {:suited [14 8]} {:suited [14 7]}
-                                                    {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;A->T-Xs
-                                                    ])}}
+                                                    (styled-cards-from-rank :suited "A" "Q")
+                                                    (styled-cards-from-rank :unsuited "A" "Q"))}}
            :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
                                                     (styled-cards-from-rank :suited "A" "Q")
-                                                    (styled-cards-from-rank :unsuited "A" "Q"))}
-                    :call {player-count-na (concat (pairs-for-ranks "9" "7")
-                                                   [{:suited-connector :any}])}}}})
+                                                    (styled-cards-from-rank :unsuited "A" "Q"))}}}
+
+   :blind {:called {:raise {player-count-na (concat (pairs-for-ranks "A" "8")
+                                                    (styled-cards-from-rank :suited "A" "J")
+                                                    (styled-cards-from-rank :unsuited "A" "J"))}
+                    :call {player-count-na [{:suited-connector :any}
+                                            {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 10]}]}}
+           :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "Q")
+                                                    [{:suited [14 13]} {:unsuited [14 13]}])}
+                    :call {player-count-na (concat (pairs-for-ranks "J" "7")
+                                                   [{:suited-connector :any}
+                                                    {:suited-one-gap :any}])}}}
+
+   :middle {:folded {:raise {player-count-na (concat (pairs-for-ranks "A" "7")
+                                                     (styled-cards-from-rank :suited "A" "T")
+                                                     (styled-cards-from-rank :unsuited "A" "J")
+                                                     (styled-cards-from-rank :suited "K" "T")
+                                                     (styled-cards-from-rank :suited "Q" "T"))}}
+            :called {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
+                                                     (styled-cards-from-rank :unsuited "A" "J"))}
+                     :call {player-count-na (concat (pairs-for-ranks "9" "2")
+                                                    [{:suited-connector :any}
+                                                     {:suited [14 10]} {:suited [13 11]} {:suited [13 10]} {:suited [12 10]}])}}
+            :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
+                                                     (styled-cards-from-rank :suited "A" "Q")
+                                                     (styled-cards-from-rank :unsuited "A" "Q"))}
+                     :call {player-count-na (concat (pairs-for-ranks "9" "2")
+                                                    [{:suited-connector :any}])}}}
+
+   :late {:folded {:raise {player-count-na (concat (styled-cards-from-rank :suited "A" "2")
+                                                   (styled-cards-from-rank :unsuited "A" "7")
+                                                   (styled-cards-from-rank :suited "K" "T")
+                                                   (styled-cards-from-rank :unsuited "K" "T")
+                                                   (styled-cards-from-rank :suited "Q" "T")
+                                                   (styled-cards-from-rank :unsuited "Q" "T")
+                                                   (styled-cards-from-rank :suited "J" "T")
+                                                   (styled-cards-from-rank :unsuited "J" "T")
+                                                   [{:pair :any}
+                                                    {:suited-connector :any}])}}
+          :called {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
+                                                   (styled-cards-from-rank :suited "A" "J")
+                                                   (styled-cards-from-rank :unsuited "A" "J"))}
+                   :call {player-count-na (concat (pairs-for-ranks "9" "2")
+                                                  (styled-cards-from-rank :suited "K" "9")
+                                                  (styled-cards-from-rank :suited "Q" "9")
+                                                  (styled-cards-from-rank :suited "J" "9")
+                                                  [{:suited-connector :any}
+                                                   {:suited [14 10]} {:suited [14 9]} {:suited [14 8]} {:suited [14 7]}
+                                                   {:suited [14 6]} {:suited [14 5]} {:suited [14 4]} {:suited [14 3]} {:suited [14 2]} ;;A->T-Xs
+                                                   ])}}
+          :raised {:raise {player-count-na (concat (pairs-for-ranks "A" "T")
+                                                   (styled-cards-from-rank :suited "A" "Q")
+                                                   (styled-cards-from-rank :unsuited "A" "Q"))}
+                   :call {player-count-na (concat (pairs-for-ranks "9" "7")
+                                                  [{:suited-connector :any}])}}}})
 
 (def low-limit-pre-flop-proper-actions
   {:early {:called {:raise {player-count-na (concat (pairs-for-ranks "A" "J")
@@ -356,9 +356,9 @@
 ;; TODO: should take top pair from flop, then include hole
 (defn top-two-pair?
   ([hand]
-    (let [rank-frequencies (rank-frequencies hand)
-           top-two (take 2 (into (sorted-map-by >) rank-frequencies))]
-       (= 2 (val (first top-two)) (val (second top-two)))))
+   (let [rank-frequencies (rank-frequencies hand)
+         top-two (take 2 (into (sorted-map-by >) rank-frequencies))]
+     (= 2 (val (first top-two)) (val (second top-two)))))
   ([hole flop]
    (top-two-pair? (concat hole flop))))
 
@@ -513,15 +513,28 @@
                    "Mediocre draw hands: overcards."
                    "Trash hands: no made hand, no draw hand (including gutshot for now)."]}))
 
-(defn deal-hole []
+(defn quality-hand?
+  "Returns true if the cards are potentially playable from the hole."
+  [hand]
+  (let [hand-ranks (hand-ranks hand)]
+    (or (pair? hand)
+        (suited-connector? hand hand-ranks)
+        (suited-one-gap? hand hand-ranks)
+        (every? #(> % 9) hand-ranks)
+        (get hand-ranks 14))))
+
+(defn deal-hole
+  [quality-hands-only?]
   (let [position (rand-nth (seq positions))
         action-to-you (rand-nth (seq actions-to-you))
         deck (shuffle fresh-deck)
         hand (take 2 deck)
         deck (drop 2 deck)]
-    (if (and (= :folded action-to-you)
-             (#{:early :blind} position))
-      (deal-hole)
+    (if (or (and quality-hands-only?
+                 (not (quality-hand? hand)))
+            (and (= :folded action-to-you)
+                 (#{:early :blind} position)))
+      (deal-hole quality-hands-only?)
       {:position position
        :action-to-you action-to-you
        :action-count (rand-nth (range 3 6))
