@@ -15,14 +15,13 @@
         suit suits]
     (str rank suit)))
 
-(defn rank
-  ([[r _]]
-   (let [r (str r)
-         upper-ranks {"A" 14 "K" 13 "Q" 12 "J" 11 "T" 10}
-         v (get upper-ranks r)]
-     (if v
-       v
-       (str->int r)))))
+(defn rank [[r _]]
+  (let [r (str r)
+        upper-ranks {"A" 14 "K" 13 "Q" 12 "J" 11 "T" 10}
+        v (get upper-ranks r)]
+    (if v
+      v
+      (str->int r))))
 
 (defn suit [[_ s]]
   (str s))
